@@ -58,9 +58,10 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
 
-            'options' => extension_loaded('pdo_mysql') ? [
-                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
-            ] : [],
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                \Pdo\Mysql::ATTR_SSL_VERIFY_SERVER_CERT => false,
+                PDO::ATTR_EMULATE_PREPARES => true,
+            ]) : [],
         ],
 
         'mariadb' => [

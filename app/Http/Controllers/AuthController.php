@@ -6,18 +6,22 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Exception;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
 
     public function showLogin()
     {
+        Log::info('Login page accessed');
+
         return view('auth.login');
     }
 
     public function showRegister()
     {
+        Log::info('Register page accessed');
+
         return view('auth.register');
     }
 
@@ -25,13 +29,18 @@ class AuthController extends Controller
     {
         try {
 
+            Log::info('User registration attempt', [
+                'name' => $request->name,
+                'phone_number' => $request->phone_number
+            ]);
+
             $request->validate([
                 'name' => 'required',
                 'phone_number' => 'required|unique:users',
                 'password' => 'required|min:6'
             ]);
 
-            User::create([
+            $user = User::create([
                 'name' => $request->name,
                 'phone_number' => $request->phone_number,
                 'address' => $request->address,
@@ -39,17 +48,31 @@ class AuthController extends Controller
                 'role' => 'client'
             ]);
 
+            Log::info('User registered successfully', [
+                'user_id' => $user->id,
+                'phone_number' => $user->phone_number
+            ]);
+
             return redirect('/login')->with('success','Account created successfully');
 
         } catch (\Exception $e) {
 
-            return back()->with('error',$e->getMessage());
+            Log::error('User registration failed', [
+                'phone_number' => $request->phone_number ?? null,
+                'error' => $e->getMessage()
+            ]);
 
+            return back()->with('error',$e->getMessage());
         }
     }
 
     public function login(Request $request)
     {
+
+        Log::info('User login attempt', [
+            'phone_number' => $request->phone_number
+        ]);
+
         $credentials = $request->validate([
             'phone_number' => 'required',
             'password' => 'required'
@@ -57,27 +80,37 @@ class AuthController extends Controller
     
         if(Auth::attempt($credentials))
         {
-            // regenerate session after login
+
             $request->session()->regenerate();
-    
-            if(Auth::user()->role == 'admin'){
-                return redirect('/admin/dashboard');
-            }
-    
+
+            Log::info('User login successful', [
+                'user_id' => Auth::id(),
+                'role' => Auth::user()->role
+            ]);
+
             if(Auth::user()->role == 'admin'){
                 return redirect('/admin/dashboard')
                     ->with('success','Login successful. Welcome back!');
             }
-            
+
             return redirect('/client/dashboard')
                 ->with('success','Login successful. Welcome back!');
         }
+
+        Log::warning('User login failed', [
+            'phone_number' => $request->phone_number
+        ]);
     
         return back()->with('error','Invalid phone number or password');
     }
 
     public function logout(Request $request)
     {
+
+        Log::info('User logout', [
+            'user_id' => Auth::id()
+        ]);
+
         Auth::logout();
 
         $request->session()->invalidate();
@@ -88,19 +121,23 @@ class AuthController extends Controller
 
     public function showAdminLogin()
     {
+
+        Log::info('Admin login page accessed');
+
         return view('auth.admin_login');
     }
 
-
-
     public function adminLogin(Request $request)
     {
+
+        Log::info('Admin login attempt', [
+            'phone_number' => $request->phone_number
+        ]);
 
         $request->validate([
             'phone_number'=>'required',
             'password'=>'required'
         ]);
-
 
         $credentials = [
             'phone_number'=>$request->phone_number,
@@ -108,17 +145,22 @@ class AuthController extends Controller
             'role'=>'admin'
         ];
 
-
         if(Auth::attempt($credentials)){
 
             $request->session()->regenerate();
 
+            Log::info('Admin login successful', [
+                'admin_id' => Auth::id()
+            ]);
+
             return redirect('/admin/dashboard')
                 ->with('success','Admin login successful');
-
         }
 
-        return back()->with('error','Invalid admin credentials');
+        Log::warning('Admin login failed', [
+            'phone_number' => $request->phone_number
+        ]);
 
+        return back()->with('error','Invalid admin credentials');
     }
 }

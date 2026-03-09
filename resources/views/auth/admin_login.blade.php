@@ -6,34 +6,166 @@
 
 <style>
 
-.login-card{
-border:none;
-border-radius:14px;
-box-shadow:0 8px 25px rgba(0,0,0,0.06);
+/* Remove layout spacing */
+main.container{
+max-width:100% !important;
+padding:0 !important;
+margin:0 !important;
 }
 
+/* Page layout */
+
+.admin-login-page{
+height:calc(100vh - 110px);
+display:flex;
+}
+
+/* LEFT HERO SECTION */
+
+.admin-left{
+background:linear-gradient(135deg,#0a7f8a,#5bb6be);
+color:white;
+display:flex;
+flex-direction:column;
+justify-content:center;
+padding:80px;
+}
+
+.logo-img{
+width:260px;
+margin-bottom:30px;
+}
+
+.hero-title{
+font-size:38px;
+font-weight:700;
+}
+
+.hero-text{
+margin-top:20px;
+opacity:.9;
+}
+
+.hero-feature{
+margin-top:12px;
+opacity:.9;
+}
+
+/* RIGHT LOGIN FORM */
+
+.admin-right{
+display:flex;
+align-items:center;
+justify-content:center;
+background:#f6f8f9;
+}
+
+.admin-form{
+width:100%;
+max-width:420px;
+padding:10px;
+}
+
+/* Inputs */
+
+.form-control{
+border-radius:10px;
+padding:12px 14px;
+width:100%;
+}
+
+/* Button */
+
 .login-btn{
-background:#038cfc;
+background:#0a7f8a;
 border:none;
 color:white;
+padding:12px;
+font-weight:500;
+border-radius:10px;
+width:100%;
 }
 
 .login-btn:hover{
-background:#0277d9;
+background:#086a73;
+}
+
+/* MOBILE */
+
+@media(max-width:992px){
+
+.admin-left{
+display:none;
+}
+
+.admin-login-page{
+height:auto;
+padding-top:80px;
+padding-bottom:60px;
+}
+
+.admin-form{
+max-width:95%;
+margin:auto;
+}
+
 }
 
 </style>
 
 
-<div class="container py-5">
 
-<div class="row justify-content-center">
+<div class="container-fluid p-0">
 
-<div class="col-md-5">
+<div class="row g-0 admin-login-page">
 
-<div class="card login-card p-4">
 
-<h4 class="text-center mb-4">Admin Login</h4>
+{{-- LEFT SIDE BRANDING --}}
+
+<div class="col-lg-6 admin-left">
+
+<img src="{{ asset('images/logo.png') }}" class="logo-img">
+
+<h1 class="hero-title">
+Zaylee's Bistro Admin Portal
+</h1>
+
+<p class="hero-text">
+
+Manage orders, oversee catering events, and monitor business performance  
+for <strong>Zaylee's Bistro by D' Lake</strong>.
+
+</p>
+
+<div class="hero-feature mt-4">
+✔ Manage customer orders
+</div>
+
+<div class="hero-feature">
+✔ Approve and schedule events
+</div>
+
+<div class="hero-feature">
+✔ Track catering performance
+</div>
+
+<div class="hero-feature">
+✔ Monitor analytics and reports
+</div>
+
+</div>
+
+
+
+{{-- RIGHT SIDE ADMIN LOGIN --}}
+
+<div class="col-lg-6 admin-right">
+
+<div class="admin-form">
+
+<h3 class="text-center mb-4">
+Admin Login
+</h3>
 
 
 @if(session('error'))
@@ -76,7 +208,7 @@ background:#0277d9;
 type="text"
 name="phone_number"
 class="form-control"
-placeholder="Phone Number"
+placeholder="Admin Phone Number"
 required
 >
 

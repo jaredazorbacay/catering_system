@@ -6,18 +6,85 @@
 
 <style>
 
+/* PAGE BACKGROUND */
+
+body{
+background:#f6f8f9;
+}
+
+/* CARD */
+
 .orders-card{
 border:none;
 border-radius:14px;
-box-shadow:0 8px 25px rgba(0,0,0,0.06);
+box-shadow:0 6px 18px rgba(0,0,0,0.05);
+background:white;
 }
 
+/* TITLE */
+
 .page-title{
-font-weight:600;
+font-weight:700;
+color:#2c3e50;
 }
+
+/* TABLE ROW */
 
 .order-row{
 cursor:pointer;
+transition:0.2s;
+}
+
+.order-row:hover{
+background:#f1f7f8;
+}
+
+/* BADGES */
+
+.badge.bg-success{
+background:#0a7f8a !important;
+}
+
+.badge.bg-warning{
+background:#ffc107 !important;
+}
+
+.badge.bg-danger{
+background:#dc3545 !important;
+}
+
+/* MODAL */
+
+.modal-content{
+border-radius:14px;
+border:none;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.modal-header{
+border-bottom:1px solid #f1f1f1;
+}
+
+.modal-footer{
+border-top:1px solid #f1f1f1;
+}
+
+/* MENU ITEMS */
+
+.list-group-item{
+border:none;
+border-bottom:1px solid #f1f1f1;
+}
+
+/* ACTION BUTTONS */
+
+.btn-success{
+background:#0a7f8a;
+border:none;
+}
+
+.btn-success:hover{
+background:#086a73;
 }
 
 </style>
@@ -46,6 +113,7 @@ cursor:pointer;
 <tr>
 
 <th>Client</th>
+<th>Phone</th>
 <th>Event</th>
 <th>Date</th>
 <th>Location</th>
@@ -64,9 +132,11 @@ cursor:pointer;
 
 <td>{{ $order->user->name }}</td>
 
+<td>{{ $order->user->phone_number }}</td>
+
 <td>{{ $order->event_name }}</td>
 
-<td>{{ $order->event_date }}</td>
+<td>{{ \Carbon\Carbon::parse($order->event_date)->format('M d, Y') }}</td>
 
 <td>{{ $order->event_location }}</td>
 
@@ -124,9 +194,7 @@ cursor:pointer;
 <div class="modal-header">
 
 <h5 class="modal-title">
-
 Order Details
-
 </h5>
 
 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -148,8 +216,8 @@ Order Details
 
 <div class="col-md-6">
 
-<strong>Event:</strong><br>
-{{ $order->event_name }}
+<strong>Phone Number:</strong><br>
+{{ $order->user->phone_number }}
 
 </div>
 
@@ -160,10 +228,22 @@ Order Details
 
 <div class="col-md-6">
 
-<strong>Date:</strong><br>
-{{ $order->event_date }}
+<strong>Event:</strong><br>
+{{ $order->event_name }}
 
 </div>
+
+<div class="col-md-6">
+
+<strong>Date:</strong><br>
+{{ \Carbon\Carbon::parse($order->event_date)->format('M d, Y') }}
+
+</div>
+
+</div>
+
+
+<div class="row mb-3">
 
 <div class="col-md-6">
 
@@ -172,17 +252,17 @@ Order Details
 
 </div>
 
-</div>
-
-
-<div class="row mb-3">
-
 <div class="col-md-6">
 
 <strong>Guests:</strong><br>
 {{ $order->guest_count }}
 
 </div>
+
+</div>
+
+
+<div class="row mb-3">
 
 <div class="col-md-6">
 
@@ -227,15 +307,11 @@ Order Details
 <li class="list-group-item d-flex justify-content-between">
 
 <span>
-
 {{ $orderItem->item->name }}
-
 </span>
 
 <span class="text-muted">
-
 ₱{{ $orderItem->price }}
-
 </span>
 
 </li>
@@ -264,9 +340,7 @@ Order Details
 @csrf
 
 <button class="btn btn-success">
-
 Approve Order
-
 </button>
 
 </form>
@@ -277,9 +351,7 @@ Approve Order
 @csrf
 
 <button class="btn btn-danger">
-
 Cancel Order
-
 </button>
 
 </form>
@@ -288,9 +360,7 @@ Cancel Order
 
 
 <button class="btn btn-secondary" data-bs-dismiss="modal">
-
 Close
-
 </button>
 
 </div>

@@ -6,28 +6,88 @@
 
 <style>
 
-.orders-card{
-    border:none;
-    border-radius:14px;
-    box-shadow:0 8px 25px rgba(0,0,0,0.06);
+/* PAGE BACKGROUND */
+
+body{
+background:#f6f8f9;
 }
+
+/* CARD */
+
+.orders-card{
+border:none;
+border-radius:14px;
+box-shadow:0 6px 18px rgba(0,0,0,0.05);
+background:white;
+}
+
+/* PAGE TITLE */
 
 .page-title{
-    font-weight:600;
+font-weight:700;
+color:#2c3e50;
 }
 
+/* BUTTON */
+
 .create-btn{
-    background:#038cfc;
-    border:none;
-    color:white;
+background:#0a7f8a;
+border:none;
+color:white;
+border-radius:8px;
+padding:8px 16px;
 }
 
 .create-btn:hover{
-    background:#0277d9;
+background:#086a73;
 }
 
+/* TABLE */
+
 .order-row{
-    cursor:pointer;
+cursor:pointer;
+transition:0.2s;
+}
+
+.order-row:hover{
+background:#f1f7f8;
+}
+
+/* BADGES */
+
+.badge.bg-success{
+background:#0a7f8a !important;
+}
+
+.badge.bg-warning{
+background:#ffc107 !important;
+}
+
+.badge.bg-danger{
+background:#dc3545 !important;
+}
+
+/* MODAL */
+
+.modal-content{
+border-radius:14px;
+border:none;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.modal-header{
+border-bottom:1px solid #f1f1f1;
+}
+
+.modal-footer{
+border-top:1px solid #f1f1f1;
+}
+
+/* LIST ITEMS */
+
+.list-group-item{
+border:none;
+border-bottom:1px solid #f1f1f1;
 }
 
 </style>
@@ -74,7 +134,7 @@ Create Order
 
 <td>{{ $order->event_name }}</td>
 
-<td>{{ $order->event_date }}</td>
+<td>{{ \Carbon\Carbon::parse($order->event_date)->format('M d, Y') }}</td>
 
 <td>{{ $order->event_location }}</td>
 
@@ -94,10 +154,10 @@ Pending
 Approved
 </span>
 
-@elseif($order->status == 'rejected')
+@elseif($order->status == 'rejected' || $order->status == 'cancelled')
 
 <span class="badge bg-danger">
-Rejected
+{{ ucfirst($order->status) }}
 </span>
 
 @else
@@ -152,9 +212,7 @@ You have no orders yet.
 <div class="modal-header">
 
 <h5 class="modal-title">
-
 Order Details
-
 </h5>
 
 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -176,7 +234,7 @@ Order Details
 <div class="col-md-6">
 
 <strong>Date:</strong><br>
-{{ $order->event_date }}
+{{ \Carbon\Carbon::parse($order->event_date)->format('M d, Y') }}
 
 </div>
 
@@ -218,10 +276,10 @@ Pending
 Approved
 </span>
 
-@elseif($order->status == 'rejected')
+@elseif($order->status == 'rejected' || $order->status == 'cancelled')
 
 <span class="badge bg-danger">
-Rejected
+{{ ucfirst($order->status) }}
 </span>
 
 @else
@@ -249,15 +307,11 @@ Rejected
 <li class="list-group-item d-flex justify-content-between">
 
 <span>
-
 {{ $orderItem->item->name }}
-
 </span>
 
 <span class="text-muted">
-
 ₱{{ $orderItem->price }}
-
 </span>
 
 </li>

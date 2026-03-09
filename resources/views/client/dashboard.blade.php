@@ -6,36 +6,97 @@
 
 <style>
 
-.dashboard-card{
-    border:none;
-    border-radius:14px;
-    box-shadow:0 8px 25px rgba(0,0,0,0.06);
+/* PAGE BACKGROUND */
+
+body{
+background:#f6f8f9;
 }
 
+/* DASHBOARD CARDS */
+
+.dashboard-card{
+border:none;
+border-radius:14px;
+box-shadow:0 6px 18px rgba(0,0,0,0.05);
+background:white;
+}
+
+/* STAT CARDS */
+
 .stat-card{
-    border:none;
-    border-radius:12px;
-    box-shadow:0 6px 18px rgba(0,0,0,0.05);
-    padding:20px;
+border:none;
+border-radius:12px;
+box-shadow:0 6px 18px rgba(0,0,0,0.05);
+padding:20px;
+background:white;
 }
 
 .stat-number{
-    font-size:28px;
-    font-weight:600;
+font-size:28px;
+font-weight:700;
+color:#2c3e50;
 }
 
+/* BUTTON */
+
 .quick-btn{
-    background:#038cfc;
-    border:none;
-    color:white;
+background:#0a7f8a;
+border:none;
+color:white;
+padding:8px 16px;
+border-radius:8px;
 }
 
 .quick-btn:hover{
-    background:#0277d9;
+background:#086a73;
 }
 
+/* TABLE */
+
 .order-row{
-    cursor:pointer;
+cursor:pointer;
+transition:0.2s;
+}
+
+.order-row:hover{
+background:#f1f7f8;
+}
+
+/* BADGES */
+
+.badge.bg-success{
+background:#0a7f8a !important;
+}
+
+.badge.bg-warning{
+background:#ffc107 !important;
+}
+
+.badge.bg-danger{
+background:#dc3545 !important;
+}
+
+/* MODAL */
+
+.modal-content{
+border-radius:14px;
+border:none;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.modal-header{
+border-bottom:1px solid #f1f1f1;
+}
+
+.modal-footer{
+border-top:1px solid #f1f1f1;
+}
+
+/* MENU ITEMS */
+
+.list-group-item{
+border:none;
+border-bottom:1px solid #f1f1f1;
 }
 
 </style>
@@ -43,15 +104,17 @@
 
 <script>
 setTimeout(function(){
-    let alerts = document.querySelectorAll('.alert');
-    alerts.forEach(alert => alert.remove());
+let alerts = document.querySelectorAll('.alert');
+alerts.forEach(alert => alert.remove());
 },3000);
 </script>
 
 
 <div class="container py-4">
 
-<h3 class="mb-4">Client Dashboard</h3>
+<h3 class="mb-4" style="font-weight:700;color:#2c3e50;">
+Client Dashboard
+</h3>
 
 
 @if(session('success'))
@@ -61,17 +124,21 @@ setTimeout(function(){
 @endif
 
 
+{{-- STATISTICS --}}
+
 <div class="row mb-4">
 
 <div class="col-md-4 mb-3">
 
-<div class="stat-card bg-light">
+<div class="stat-card">
 
 <div class="stat-number">
 {{ $totalOrders ?? 0 }}
 </div>
 
-<div>Total Orders</div>
+<div class="text-muted">
+Total Orders
+</div>
 
 </div>
 
@@ -80,13 +147,15 @@ setTimeout(function(){
 
 <div class="col-md-4 mb-3">
 
-<div class="stat-card bg-light">
+<div class="stat-card">
 
 <div class="stat-number text-warning">
 {{ $pendingOrders ?? 0 }}
 </div>
 
-<div>Pending Orders</div>
+<div class="text-muted">
+Pending Orders
+</div>
 
 </div>
 
@@ -95,20 +164,24 @@ setTimeout(function(){
 
 <div class="col-md-4 mb-3">
 
-<div class="stat-card bg-light">
+<div class="stat-card">
 
 <div class="stat-number text-success">
 {{ $approvedOrders ?? 0 }}
 </div>
 
-<div>Approved Orders</div>
-
+<div class="text-muted">
+Approved Orders
 </div>
 
 </div>
 
 </div>
 
+</div>
+
+
+{{-- QUICK ACTIONS --}}
 
 <div class="card dashboard-card p-4 mb-4">
 
@@ -120,7 +193,7 @@ setTimeout(function(){
 Create New Order
 </a>
 
-<a href="/client/orders" class="btn btn-outline-primary">
+<a href="/client/orders" class="btn btn-outline-secondary">
 View My Orders
 </a>
 
@@ -128,6 +201,8 @@ View My Orders
 
 </div>
 
+
+{{-- RECENT ORDERS --}}
 
 <div class="card dashboard-card p-4">
 
@@ -158,7 +233,7 @@ View My Orders
 
 <td>{{ $order->event_name }}</td>
 
-<td>{{ $order->event_date }}</td>
+<td>{{ \Carbon\Carbon::parse($order->event_date)->format('M d, Y') }}</td>
 
 <td>{{ $order->guest_count }}</td>
 
@@ -249,7 +324,7 @@ Order Details
 
 <div class="col-md-6">
 <strong>Date:</strong><br>
-{{ $order->event_date }}
+{{ \Carbon\Carbon::parse($order->event_date)->format('M d, Y') }}
 </div>
 
 </div>

@@ -6,74 +6,108 @@
 
 <style>
 
-.card{
-    border:none;
-    border-radius:14px;
-    box-shadow:0 8px 25px rgba(0,0,0,0.06);
+/* PAGE BACKGROUND */
+
+body{
+background:#f6f8f9;
 }
+
+/* CARD */
+
+.card{
+border:none;
+border-radius:14px;
+box-shadow:0 6px 18px rgba(0,0,0,0.05);
+background:white;
+}
+
+/* HEADER */
 
 .header-title{
-    font-weight:600;
-    color:#444;
+font-weight:700;
+color:#2c3e50;
 }
+
+/* SECTION TITLES */
 
 .section-title{
-    font-weight:600;
-    font-size:15px;
-    padding:8px 12px;
-    border-radius:8px;
-    margin-bottom:10px;
+font-weight:600;
+font-size:15px;
+padding:8px 12px;
+border-radius:8px;
+margin-bottom:10px;
 }
 
+/* CATEGORY COLORS */
+
 .food-title{
-    background:#ffe8e8;
-    color:#b44;
+background:#e8f6f7;
+color:#0a7f8a;
 }
 
 .drink-title{
-    background:#e8f7ff;
-    color:#2a6f9b;
+background:#f1fbfc;
+color:#0a7f8a;
 }
 
 .dessert-title{
-    background:#fff4e6;
-    color:#c77d00;
+background:#f5f7ff;
+color:#5a6abf;
 }
+
+/* MENU LIST */
 
 .menu-box{
-    max-height:300px;
-    overflow-y:auto;
-    padding-right:5px;
+max-height:300px;
+overflow-y:auto;
+padding-right:5px;
 }
 
+/* MENU ITEM */
+
 .menu-item{
-    padding:6px 4px;
-    border-radius:6px;
-    transition:0.2s;
+padding:8px;
+border-radius:8px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+transition:0.2s;
+font-size:14px;
 }
 
 .menu-item:hover{
-    background:#f7f7f7;
+background:#f1f7f8;
 }
+
+.menu-item input{
+margin-right:8px;
+}
+
+/* PRICE */
 
 .menu-price{
-    font-size:13px;
-    color:#888;
+font-size:13px;
+color:#888;
 }
 
+/* BUTTON */
+
 .create-btn{
-    background:#038cfc;
-    border:none;
-    color:white;
-    font-weight:500;
+background:#0a7f8a;
+border:none;
+color:white;
+font-weight:500;
+border-radius:8px;
 }
 
 .create-btn:hover{
-    background:#0277d9;
+background:#086a73;
 }
 
+/* INPUTS */
+
 .form-control{
-    border-radius:8px;
+border-radius:8px;
 }
 
 </style>
@@ -91,6 +125,7 @@
 
 
 {{-- VALIDATION ERRORS --}}
+
 @if ($errors->any())
 
 <div class="alert alert-danger">
@@ -116,6 +151,7 @@
 
 @csrf
 
+
 <div class="row mb-3">
 
 <div class="col-md-6">
@@ -132,6 +168,7 @@ required
 
 </div>
 
+
 <div class="col-md-3">
 
 <label class="form-label">Event Date</label>
@@ -145,6 +182,7 @@ required
 >
 
 </div>
+
 
 <div class="col-md-3">
 
@@ -178,6 +216,7 @@ required
 </div>
 
 
+
 <div class="row">
 
 <!-- FOOD -->
@@ -192,7 +231,9 @@ Food
 
 @foreach($foods as $item)
 
-<div class="menu-item">
+<label class="menu-item">
+
+<div>
 
 <input
 type="checkbox"
@@ -203,9 +244,11 @@ value="{{$item->id}}"
 
 {{$item->name}}
 
+</div>
+
 <span class="menu-price">₱{{$item->price}}</span>
 
-</div>
+</label>
 
 @endforeach
 
@@ -226,7 +269,9 @@ Drinks
 
 @foreach($drinks as $item)
 
-<div class="menu-item">
+<label class="menu-item">
+
+<div>
 
 <input
 type="checkbox"
@@ -237,9 +282,11 @@ value="{{$item->id}}"
 
 {{$item->name}}
 
+</div>
+
 <span class="menu-price">₱{{$item->price}}</span>
 
-</div>
+</label>
 
 @endforeach
 
@@ -260,7 +307,9 @@ Desserts
 
 @foreach($desserts as $item)
 
-<div class="menu-item">
+<label class="menu-item">
+
+<div>
 
 <input
 type="checkbox"
@@ -271,15 +320,18 @@ value="{{$item->id}}"
 
 {{$item->name}}
 
+</div>
+
 <span class="menu-price">₱{{$item->price}}</span>
 
-</div>
+</label>
 
 @endforeach
 
 </div>
 
 </div>
+
 
 </div>
 

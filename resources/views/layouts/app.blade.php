@@ -4,96 +4,74 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>@yield('title','Catering System')</title>
+<title>@yield('title','Zaylee\'s Bistro by D\' Lake')</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
 
 body{
-    background:linear-gradient(135deg,#8cd3f5,#deedfc);
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-
+background:#f6f8f9;
+min-height:100vh;
+display:flex;
+flex-direction:column;
+font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
 }
 
 main{
-    flex:1;
+flex:1;
 }
 
+/* NAVBAR */
+
 .navbar{
-    background:#FFFFFF;
+background:white;
+border-bottom:1px solid #e9ecef;
 }
 
 .navbar-brand{
-    color:black !important;
-    font-weight:600;
+color:#2c3e50 !important;
+font-weight:700;
+font-size:20px;
 }
 
-.navbar-brand img {
-    height: 500px;
-    width: auto;
+.navbar-brand img{
+height:60px;
+width:auto;
 }
 
 .nav-link{
-    color:black !important;
+color:#2c3e50 !important;
+font-weight:500;
 }
 
 .nav-link:hover{
-    color:#e6f2ff !important;
+color:#0a7f8a !important;
 }
+
+/* BUTTON THEME */
+
+.btn-primary{
+background:#0a7f8a;
+border:none;
+}
+
+.btn-primary:hover{
+background:#086a73;
+}
+
+/* FOOTER */
+
 .footer{
-    background:#f8f9fa;
-    padding:15px;
-    text-align:center;
-    font-size:14px;
-    color:#777;
+background:white;
+border-top:1px solid #e9ecef;
+padding:18px;
+text-align:center;
+font-size:14px;
+color:#6c757d;
 }
 
-</style>
-
-</head>
-
-<body>
-
-@include('partials.header')
-
-<main class="container py-4">
-
-@yield('content')
-
-</main>
-
-@include('partials.footer')
-
-@if(session('success'))
-
-<div class="modal fade" id="successModal" tabindex="-1">
-<div class="modal-dialog modal-dialog-centered">
-<div class="modal-content text-center p-4">
-
-<div class="checkmark-container">
-
-<div class="checkmark-circle">
-<div class="checkmark"></div>
-</div>
-
-</div>
-
-<h4 class="mt-3 text-success">Success</h4>
-
-<p>{{ session('success') }}</p>
-
-<button class="btn btn-primary mt-2" data-bs-dismiss="modal">
-Continue
-</button>
-
-</div>
-</div>
-</div>
-
-<style>
+/* SUCCESS MODAL */
 
 .checkmark-container{
 display:flex;
@@ -135,6 +113,49 @@ animation:draw 0.4s ease forwards;
 
 </style>
 
+</head>
+
+<body>
+
+@include('partials.header')
+
+<main class="container py-4">
+
+@yield('content')
+
+</main>
+
+@include('partials.footer')
+
+
+{{-- SUCCESS MODAL --}}
+
+@if(session('success'))
+
+<div class="modal fade" id="successModal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content text-center p-4">
+
+<div class="checkmark-container">
+
+<div class="checkmark-circle">
+<div class="checkmark"></div>
+</div>
+
+</div>
+
+<h4 class="mt-3 text-success">Success</h4>
+
+<p>{{ session('success') }}</p>
+
+<button class="btn btn-primary mt-2" data-bs-dismiss="modal">
+Continue
+</button>
+
+</div>
+</div>
+</div>
+
 <script>
 
 document.addEventListener("DOMContentLoaded", function(){
@@ -148,6 +169,8 @@ successModal.show();
 
 @endif
 
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

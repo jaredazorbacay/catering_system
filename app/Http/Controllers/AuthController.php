@@ -35,9 +35,20 @@ class AuthController extends Controller
             ]);
 
             $request->validate([
-                'name' => 'required',
-                'phone_number' => 'required|unique:users',
+                'name' => 'required|string|max:255',
+
+                'phone_number' => [
+                    'required',
+                    'digits:11',           // exactly 11 digits
+                    'numeric',             // numbers only
+                    'unique:users,phone_number'
+                ],
+
                 'password' => 'required|min:6'
+            ],[
+                'phone_number.digits' => 'Phone number must be exactly 11 digits.',
+                'phone_number.numeric' => 'Phone number must contain only numbers.',
+                'phone_number.unique' => 'This phone number is already registered.'
             ]);
 
             $user = User::create([

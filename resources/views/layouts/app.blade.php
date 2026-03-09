@@ -23,16 +23,21 @@ main{
 }
 
 .navbar{
-    background:#038cfc;
+    background:#FFFFFF;
 }
 
 .navbar-brand{
-    color:white !important;
+    color:black !important;
     font-weight:600;
 }
 
+.navbar-brand img {
+    height: 500px;
+    width: auto;
+}
+
 .nav-link{
-    color:white !important;
+    color:black !important;
 }
 
 .nav-link:hover{

@@ -56,14 +56,13 @@
 
 </ul>
 
+
 <ul class="navbar-nav align-items-lg-center">
 
 @if(Auth::check())
 
 <li class="nav-item text-white me-lg-3 mt-2 mt-lg-0">
-
 Hello, {{ Auth::user()->name }}
-
 </li>
 
 <li class="nav-item">
@@ -83,6 +82,12 @@ Hello, {{ Auth::user()->name }}
 
 <li class="nav-item">
 <a class="nav-link text-white" href="/register">Register</a>
+</li>
+
+<li class="nav-item ms-2">
+<a class="btn btn-info btn-sm" href="/admin/login">
+Admin
+</a>
 </li>
 
 @endif

@@ -85,7 +85,7 @@ Hello, {{ Auth::user()->name }}
 </li>
 
 <li class="nav-item ms-2">
-<a class="btn btn-info btn-sm" href="/admin/login">
+<a class="btn btn-primary" href="/admin/login">
 Admin
 </a>
 </li>

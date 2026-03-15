@@ -6,108 +6,50 @@
 
 <style>
 
-/* PAGE BACKGROUND */
-
-body{
-background:#f6f8f9;
-}
-
-/* CARD */
-
 .card{
 border:none;
 border-radius:14px;
-box-shadow:0 6px 18px rgba(0,0,0,0.05);
-background:white;
+box-shadow:0 8px 25px rgba(0,0,0,0.06);
 }
-
-/* HEADER */
 
 .header-title{
-font-weight:700;
-color:#2c3e50;
-}
-
-/* SECTION TITLES */
-
-.section-title{
 font-weight:600;
-font-size:15px;
-padding:8px 12px;
-border-radius:8px;
-margin-bottom:10px;
-}
-
-/* CATEGORY COLORS */
-
-.food-title{
-background:#e8f6f7;
 color:#0a7f8a;
 }
 
-.drink-title{
-background:#f1fbfc;
-color:#0a7f8a;
-}
-
-.dessert-title{
-background:#f5f7ff;
-color:#5a6abf;
-}
-
-/* MENU LIST */
-
-.menu-box{
-max-height:300px;
-overflow-y:auto;
-padding-right:5px;
-}
-
-/* MENU ITEM */
-
-.menu-item{
-padding:8px;
+.form-control{
 border-radius:8px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-transition:0.2s;
-font-size:14px;
 }
-
-.menu-item:hover{
-background:#f1f7f8;
-}
-
-.menu-item input{
-margin-right:8px;
-}
-
-/* PRICE */
-
-.menu-price{
-font-size:13px;
-color:#888;
-}
-
-/* BUTTON */
 
 .create-btn{
 background:#0a7f8a;
 border:none;
 color:white;
 font-weight:500;
-border-radius:8px;
 }
 
 .create-btn:hover{
 background:#086a73;
 }
 
-/* INPUTS */
+.cart-card{
+border:none;
+border-radius:10px;
+box-shadow:0 6px 18px rgba(0,0,0,0.05);
+}
 
-.form-control{
-border-radius:8px;
+.cart-img{
+height:70px;
+width:100%;
+object-fit:cover;
+border-radius:6px;
+}
+
+.remove-btn{
+position:absolute;
+top:5px;
+right:5px;
+padding:4px 6px;
 }
 
 </style>
@@ -121,16 +63,14 @@ border-radius:8px;
 
 <div class="card p-4">
 
-<h4 class="header-title mb-4">Create Catering Order</h4>
+<h4 class="header-title mb-4">
+Create Catering Order
+</h4>
 
-
-{{-- VALIDATION ERRORS --}}
 
 @if ($errors->any())
 
 <div class="alert alert-danger">
-
-<strong>Please fix the following errors:</strong>
 
 <ul class="mb-0">
 
@@ -147,12 +87,118 @@ border-radius:8px;
 @endif
 
 
+
+{{-- CART ACTIONS (SEPARATE FORMS) --}}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+<h5 class="header-title">
+Selected Menu Items
+</h5>
+
+<div class="d-flex gap-2">
+
+@if($cartItems->count())
+
+<a href="/client/cart" class="btn btn-primary btn-sm">
+Add More Items
+</a>
+
+<form method="POST" action="/client/cart/clear">
+@csrf
+<button class="btn btn-danger btn-sm">
+Clear All
+</button>
+</form>
+
+@endif
+
+</div>
+
+</div>
+
+
+
+@if($cartItems->count())
+
+<div class="row">
+
+@foreach($cartItems as $cart)
+
+<div class="col-md-3 mb-3">
+
+<div class="card cart-card p-2 position-relative">
+
+
+<form method="POST"
+action="/client/cart/remove/{{$cart->id}}">
+
+@csrf
+
+<button class="btn btn-danger btn-sm remove-btn">
+✖
+</button>
+
+</form>
+
+
+<img src="{{$cart->item->photo_url}}"
+class="cart-img">
+
+
+<div class="mt-2 small">
+
+<strong>{{$cart->item->name}}</strong>
+
+<br>
+
+Qty: {{$cart->quantity}}
+
+<br>
+
+₱{{$cart->item->price * $cart->quantity}}
+
+</div>
+
+</div>
+
+</div>
+
+@endforeach
+
+</div>
+
+
+<hr>
+
+<h4 class="text-end">
+Total: ₱{{$total}}
+</h4>
+
+@else
+
+<p class="text-muted">
+No items in cart
+</p>
+
+<a href="/client/cart" class="btn btn-primary">
+Add to Cart
+</a>
+
+@endif
+
+
+
+{{-- ORDER FORM (COMPLETELY SEPARATE) --}}
+
+@if($cartItems->count())
+
 <form method="POST" action="/client/order/store">
 
 @csrf
 
 
-<div class="row mb-3">
+<div class="row mt-4">
 
 <div class="col-md-6">
 
@@ -162,12 +208,10 @@ border-radius:8px;
 type="text"
 name="event_name"
 class="form-control"
-value="{{ old('event_name') }}"
 required
 >
 
 </div>
-
 
 <div class="col-md-3">
 
@@ -177,12 +221,10 @@ required
 type="date"
 name="event_date"
 class="form-control"
-value="{{ old('event_date') }}"
 required
 >
 
 </div>
-
 
 <div class="col-md-3">
 
@@ -192,7 +234,6 @@ required
 type="number"
 name="guest_count"
 class="form-control"
-value="{{ old('guest_count') }}"
 required
 >
 
@@ -201,7 +242,7 @@ required
 </div>
 
 
-<div class="mb-4">
+<div class="mt-3">
 
 <label class="form-label">Event Location</label>
 
@@ -209,129 +250,8 @@ required
 type="text"
 name="event_location"
 class="form-control"
-value="{{ old('event_location') }}"
 required
 >
-
-</div>
-
-
-
-<div class="row">
-
-<!-- FOOD -->
-
-<div class="col-md-4">
-
-<div class="section-title food-title">
-Food
-</div>
-
-<div class="menu-box">
-
-@foreach($foods as $item)
-
-<label class="menu-item">
-
-<div>
-
-<input
-type="checkbox"
-name="items[]"
-value="{{$item->id}}"
-{{ in_array($item->id, old('items', [])) ? 'checked' : '' }}
->
-
-{{$item->name}}
-
-</div>
-
-<span class="menu-price">₱{{$item->price}}</span>
-
-</label>
-
-@endforeach
-
-</div>
-
-</div>
-
-
-<!-- DRINKS -->
-
-<div class="col-md-4">
-
-<div class="section-title drink-title">
-Drinks
-</div>
-
-<div class="menu-box">
-
-@foreach($drinks as $item)
-
-<label class="menu-item">
-
-<div>
-
-<input
-type="checkbox"
-name="items[]"
-value="{{$item->id}}"
-{{ in_array($item->id, old('items', [])) ? 'checked' : '' }}
->
-
-{{$item->name}}
-
-</div>
-
-<span class="menu-price">₱{{$item->price}}</span>
-
-</label>
-
-@endforeach
-
-</div>
-
-</div>
-
-
-<!-- DESSERTS -->
-
-<div class="col-md-4">
-
-<div class="section-title dessert-title">
-Desserts
-</div>
-
-<div class="menu-box">
-
-@foreach($desserts as $item)
-
-<label class="menu-item">
-
-<div>
-
-<input
-type="checkbox"
-name="items[]"
-value="{{$item->id}}"
-{{ in_array($item->id, old('items', [])) ? 'checked' : '' }}
->
-
-{{$item->name}}
-
-</div>
-
-<span class="menu-price">₱{{$item->price}}</span>
-
-</label>
-
-@endforeach
-
-</div>
-
-</div>
-
 
 </div>
 
@@ -339,12 +259,16 @@ value="{{$item->id}}"
 <div class="mt-4 text-end">
 
 <button class="btn create-btn px-4 py-2">
-Create Order
+Submit Order
 </button>
 
 </div>
 
+
 </form>
+
+@endif
+
 
 </div>
 

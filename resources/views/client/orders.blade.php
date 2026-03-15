@@ -119,6 +119,7 @@ Create Order
 <th>Date</th>
 <th>Location</th>
 <th>Guests</th>
+<th>Total</th>
 <th>Status</th>
 </tr>
 
@@ -130,6 +131,10 @@ Create Order
 
 @foreach($orders as $order)
 
+@php
+$total = $order->items->sum(fn($i) => $i->price * $i->quantity);
+@endphp
+
 <tr class="order-row" data-bs-toggle="modal" data-bs-target="#orderModal{{ $order->id }}">
 
 <td>{{ $order->event_name }}</td>
@@ -139,6 +144,10 @@ Create Order
 <td>{{ $order->event_location }}</td>
 
 <td>{{ $order->guest_count }}</td>
+
+<td>
+₱{{ number_format($total,2) }}
+</td>
 
 <td>
 
@@ -178,7 +187,7 @@ Approved
 
 <tr>
 
-<td colspan="5" class="text-center text-muted">
+<td colspan="6" class="text-center text-muted">
 
 You have no orders yet.
 
@@ -202,6 +211,10 @@ You have no orders yet.
 {{-- ORDER MODALS --}}
 
 @foreach($orders as $order)
+
+@php
+$total = $order->items->sum(fn($i) => $i->price * $i->quantity);
+@endphp
 
 <div class="modal fade" id="orderModal{{ $order->id }}" tabindex="-1">
 
@@ -304,14 +317,24 @@ Approved
 
 @foreach($order->items as $orderItem)
 
-<li class="list-group-item d-flex justify-content-between">
+<li class="list-group-item d-flex justify-content-between align-items-center">
 
-<span>
-{{ $orderItem->item->name }}
-</span>
+<div>
+
+<strong>{{ $orderItem->item->name }}</strong>
+
+<br>
+
+<small class="text-muted">
+Quantity: {{ $orderItem->quantity }}
+</small>
+
+</div>
 
 <span class="text-muted">
-₱{{ $orderItem->price }}
+
+₱{{ number_format($orderItem->price * $orderItem->quantity,2) }}
+
 </span>
 
 </li>
@@ -325,6 +348,20 @@ Approved
 <p class="text-muted">No items selected.</p>
 
 @endif
+
+
+<hr>
+
+<h5 class="text-end">
+
+Total:
+<strong>
+
+₱{{ number_format($total,2) }}
+
+</strong>
+
+</h5>
 
 
 </div>

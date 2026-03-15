@@ -118,6 +118,7 @@ background:#086a73;
 <th>Date</th>
 <th>Location</th>
 <th>Guests</th>
+<th>Total</th>
 <th>Status</th>
 
 </tr>
@@ -127,6 +128,10 @@ background:#086a73;
 <tbody>
 
 @foreach($orders as $order)
+
+@php
+$total = $order->items->sum(fn($i) => $i->price * $i->quantity);
+@endphp
 
 <tr class="order-row" data-bs-toggle="modal" data-bs-target="#orderModal{{ $order->id }}">
 
@@ -141,6 +146,8 @@ background:#086a73;
 <td>{{ $order->event_location }}</td>
 
 <td>{{ $order->guest_count }}</td>
+
+<td>₱{{ number_format($total,2) }}</td>
 
 <td>
 
@@ -184,6 +191,10 @@ background:#086a73;
 {{-- ORDER DETAIL MODALS --}}
 
 @foreach($orders as $order)
+
+@php
+$total = $order->items->sum(fn($i) => $i->price * $i->quantity);
+@endphp
 
 <div class="modal fade" id="orderModal{{ $order->id }}" tabindex="-1">
 
@@ -304,14 +315,24 @@ Order Details
 
 @foreach($order->items as $orderItem)
 
-<li class="list-group-item d-flex justify-content-between">
+<li class="list-group-item d-flex justify-content-between align-items-center">
 
-<span>
-{{ $orderItem->item->name }}
-</span>
+<div>
+
+<strong>{{ $orderItem->item->name }}</strong>
+
+<br>
+
+<small class="text-muted">
+Quantity: {{ $orderItem->quantity }}
+</small>
+
+</div>
 
 <span class="text-muted">
-₱{{ $orderItem->price }}
+
+₱{{ number_format($orderItem->price * $orderItem->quantity,2) }}
+
 </span>
 
 </li>
@@ -325,6 +346,20 @@ Order Details
 <p class="text-muted">No menu items found.</p>
 
 @endif
+
+
+<hr>
+
+<h5 class="text-end">
+
+Total:
+<strong>
+
+₱{{ number_format($total,2) }}
+
+</strong>
+
+</h5>
 
 
 </div>

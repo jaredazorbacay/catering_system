@@ -148,6 +148,7 @@ View Analytics
 <th>Event</th>
 <th>Date</th>
 <th>Guests</th>
+<th>Total</th>
 </tr>
 
 </thead>
@@ -158,6 +159,10 @@ View Analytics
 
 @foreach($upcomingEvents as $event)
 
+@php
+$total = $event->items->sum(fn($i) => $i->price * $i->quantity);
+@endphp
+
 <tr class="order-row" data-bs-toggle="modal" data-bs-target="#orderModal{{ $event->id }}">
 
 <td>{{ $event->user->name }}</td>
@@ -165,6 +170,7 @@ View Analytics
 <td>{{ $event->event_name }}</td>
 <td>{{ \Carbon\Carbon::parse($event->event_date)->format('M d, Y') }}</td>
 <td>{{ $event->guest_count }}</td>
+<td>₱{{ number_format($total,2) }}</td>
 
 </tr>
 
@@ -173,7 +179,7 @@ View Analytics
 @else
 
 <tr>
-<td colspan="5" class="text-center text-muted">
+<td colspan="6" class="text-center text-muted">
 No upcoming events
 </td>
 </tr>
@@ -207,6 +213,7 @@ No upcoming events
 <th>Phone</th>
 <th>Event</th>
 <th>Date</th>
+<th>Total</th>
 <th>Status</th>
 </tr>
 
@@ -218,12 +225,17 @@ No upcoming events
 
 @foreach($pastEvents as $event)
 
+@php
+$total = $event->items->sum(fn($i) => $i->price * $i->quantity);
+@endphp
+
 <tr class="order-row" data-bs-toggle="modal" data-bs-target="#orderModal{{ $event->id }}">
 
 <td>{{ $event->user->name }}</td>
 <td>{{ $event->user->phone_number }}</td>
 <td>{{ $event->event_name }}</td>
 <td>{{ \Carbon\Carbon::parse($event->event_date)->format('M d, Y') }}</td>
+<td>₱{{ number_format($total,2) }}</td>
 
 <td>
 <span class="badge bg-success">Finished</span>
@@ -236,7 +248,7 @@ No upcoming events
 @else
 
 <tr>
-<td colspan="5" class="text-center text-muted">
+<td colspan="6" class="text-center text-muted">
 No past events
 </td>
 </tr>
@@ -258,6 +270,10 @@ No past events
 {{-- ORDER DETAIL MODALS --}}
 
 @foreach($upcomingEvents->merge($pastEvents)->unique('id') as $order)
+
+@php
+$total = $order->items->sum(fn($i) => $i->price * $i->quantity);
+@endphp
 
 <div class="modal fade" id="orderModal{{ $order->id }}" tabindex="-1">
 
@@ -378,14 +394,24 @@ Order Details
 
 @foreach($order->items as $orderItem)
 
-<li class="list-group-item d-flex justify-content-between">
+<li class="list-group-item d-flex justify-content-between align-items-center">
 
-<span>
-{{ $orderItem->item->name }}
-</span>
+<div>
+
+<strong>{{ $orderItem->item->name }}</strong>
+
+<br>
+
+<small class="text-muted">
+Quantity: {{ $orderItem->quantity }}
+</small>
+
+</div>
 
 <span class="text-muted">
-₱{{ $orderItem->price }}
+
+₱{{ number_format($orderItem->price * $orderItem->quantity,2) }}
+
 </span>
 
 </li>
@@ -399,6 +425,20 @@ Order Details
 <p class="text-muted">No menu items found.</p>
 
 @endif
+
+
+<hr>
+
+<h5 class="text-end">
+
+Total:
+<strong>
+
+₱{{ number_format($total,2) }}
+
+</strong>
+
+</h5>
 
 
 </div>

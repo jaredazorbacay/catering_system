@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Item;
+use Illuminate\Support\Facades\DB;
 
 class ItemsSeeder extends Seeder
 {
@@ -12,111 +13,86 @@ class ItemsSeeder extends Seeder
 
         $items = [
 
-            /* ---------------- FOOD ---------------- */
+            /* FOOD */
 
-            ['name'=>'Adobo','category'=>'food','price'=>150],
-            ['name'=>'Sinigang','category'=>'food','price'=>150],
-            ['name'=>'Kare-Kare','category'=>'food','price'=>180],
-            ['name'=>'Lechon','category'=>'food','price'=>300],
-            ['name'=>'Pancit Canton','category'=>'food','price'=>120],
-            ['name'=>'Pancit Bihon','category'=>'food','price'=>120],
-            ['name'=>'Pancit Malabon','category'=>'food','price'=>130],
-            ['name'=>'Bulalo','category'=>'food','price'=>200],
-            ['name'=>'Tinola','category'=>'food','price'=>150],
-            ['name'=>'Afritada','category'=>'food','price'=>150],
-            ['name'=>'Menudo','category'=>'food','price'=>150],
-            ['name'=>'Mechado','category'=>'food','price'=>170],
-            ['name'=>'Kaldereta','category'=>'food','price'=>170],
-            ['name'=>'Bistek Tagalog','category'=>'food','price'=>170],
-            ['name'=>'Sisig','category'=>'food','price'=>160],
-            ['name'=>'Laing','category'=>'food','price'=>120],
-            ['name'=>'Bicol Express','category'=>'food','price'=>160],
-            ['name'=>'Pinakbet','category'=>'food','price'=>120],
-            ['name'=>'Dinuguan','category'=>'food','price'=>140],
-            ['name'=>'Tokwa’t Baboy','category'=>'food','price'=>130],
-            ['name'=>'Lumpiang Shanghai','category'=>'food','price'=>120],
-            ['name'=>'Lumpiang Gulay','category'=>'food','price'=>100],
-            ['name'=>'Lumpiang Sariwa','category'=>'food','price'=>120],
-            ['name'=>'Chicken Inasal','category'=>'food','price'=>170],
-            ['name'=>'Batchoy','category'=>'food','price'=>140],
-            ['name'=>'Arroz Caldo','category'=>'food','price'=>120],
-            ['name'=>'Lugaw','category'=>'food','price'=>90],
-            ['name'=>'Goto','category'=>'food','price'=>100],
-            ['name'=>'Tapsilog','category'=>'food','price'=>120],
-            ['name'=>'Longsilog','category'=>'food','price'=>120],
-            ['name'=>'Bangsilog','category'=>'food','price'=>120],
-            ['name'=>'Hotsilog','category'=>'food','price'=>110],
-            ['name'=>'Tocilog','category'=>'food','price'=>120],
-            ['name'=>'Spamsilog','category'=>'food','price'=>130],
-            ['name'=>'Daingsilog','category'=>'food','price'=>130],
+            ['name'=>'Adobo','category'=>'food','price'=>150,'description'=>'Classic Filipino dish cooked in soy sauce, vinegar and garlic.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Chicken_adobo.jpg/1920px-Chicken_adobo.jpg'],
 
-            ['name'=>'Chicken BBQ','category'=>'food','price'=>120],
-            ['name'=>'Pork BBQ','category'=>'food','price'=>120],
-            ['name'=>'Isaw','category'=>'food','price'=>60],
-            ['name'=>'Betamax','category'=>'food','price'=>60],
-            ['name'=>'Adidas','category'=>'food','price'=>60],
+            ['name'=>'Sinigang','category'=>'food','price'=>150,'description'=>'Filipino sour tamarind soup with vegetables and meat.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Sinigang_na_Baboy.jpg/1280px-Sinigang_na_Baboy.jpg'],
 
-            ['name'=>'Crispy Pata','category'=>'food','price'=>300],
-            ['name'=>'Crispy Pork Belly','category'=>'food','price'=>280],
-            ['name'=>'Fried Chicken Filipino Style','category'=>'food','price'=>150],
-            ['name'=>'Fried Tilapia','category'=>'food','price'=>140],
-            ['name'=>'Fried Bangus','category'=>'food','price'=>150],
+            ['name'=>'Kare-Kare','category'=>'food','price'=>180,'description'=>'Peanut stew with vegetables served with shrimp paste.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Kare-kare.jpg/640px-Kare-kare.jpg'],
 
-            ['name'=>'Chop Suey Filipino Style','category'=>'food','price'=>120],
-            ['name'=>'Ampalaya with Egg','category'=>'food','price'=>110],
-            ['name'=>'Ginisang Monggo','category'=>'food','price'=>110],
+            ['name'=>'Lechon','category'=>'food','price'=>300,'description'=>'Crispy roasted pig commonly served during celebrations.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Lechon_Baboy%2C_June_2025_%281%29.jpg/640px-Lechon_Baboy%2C_June_2025_%281%29.jpg'],
 
-            /* ---------------- DESSERTS ---------------- */
+            ['name'=>'Pancit Canton','category'=>'food','price'=>120,'description'=>'Stir-fried egg noodles with vegetables and meat.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Pancit_canton.jpg/640px-Pancit_canton.jpg'],
 
-            ['name'=>'Halo-Halo','category'=>'dessert','price'=>120],
-            ['name'=>'Mais Con Yelo','category'=>'dessert','price'=>100],
-            ['name'=>'Taho','category'=>'dessert','price'=>50],
-            ['name'=>'Leche Flan','category'=>'dessert','price'=>90],
-            ['name'=>'Ube Halaya','category'=>'dessert','price'=>120],
-            ['name'=>'Polvoron','category'=>'dessert','price'=>60],
-            ['name'=>'Pastillas de Leche','category'=>'dessert','price'=>70],
-            ['name'=>'Yema','category'=>'dessert','price'=>70],
-            ['name'=>'Brazo de Mercedes','category'=>'dessert','price'=>140],
-            ['name'=>'Ensaymada','category'=>'dessert','price'=>80],
-            ['name'=>'Pandesal','category'=>'dessert','price'=>50],
-            ['name'=>'Pan de Coco','category'=>'dessert','price'=>70],
-            ['name'=>'Spanish Bread','category'=>'dessert','price'=>70],
-            ['name'=>'Buko Pie','category'=>'dessert','price'=>150],
-            ['name'=>'Cassava Cake','category'=>'dessert','price'=>120],
-            ['name'=>'Maja Blanca','category'=>'dessert','price'=>110],
-            ['name'=>'Buko Pandan','category'=>'dessert','price'=>120],
-            ['name'=>'Fruit Salad','category'=>'dessert','price'=>120],
-            ['name'=>'Mango Float','category'=>'dessert','price'=>140],
-            ['name'=>'Pichi-Pichi','category'=>'dessert','price'=>90],
-            ['name'=>'Turon','category'=>'dessert','price'=>60],
-            ['name'=>'Banana Cue','category'=>'dessert','price'=>60],
-            ['name'=>'Kamote Cue','category'=>'dessert','price'=>60],
-            ['name'=>'Maruya','category'=>'dessert','price'=>60],
+            ['name'=>'Pancit Bihon','category'=>'food','price'=>120,'description'=>'Rice noodle dish with vegetables and meat.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Pancit_Bihon_Guisado_Recipe.jpg/640px-Pancit_Bihon_Guisado_Recipe.jpg'],
 
-            /* ---------------- DRINKS ---------------- */
+            ['name'=>'Bulalo','category'=>'food','price'=>200,'description'=>'Beef marrow soup simmered for hours with vegetables.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Bulalo_%28Philippines%29.jpg/640px-Bulalo_%28Philippines%29.jpg'],
 
-            ['name'=>'Kalamansi Juice','category'=>'drink','price'=>60],
-            ['name'=>'Buko Juice','category'=>'drink','price'=>70],
-            ['name'=>'Sago’t Gulaman','category'=>'drink','price'=>60],
-            ['name'=>'Pineapple Juice','category'=>'drink','price'=>70],
-            ['name'=>'Mango Shake','category'=>'drink','price'=>80],
-            ['name'=>'Avocado Shake','category'=>'drink','price'=>90],
-            ['name'=>'Melon Juice','category'=>'drink','price'=>70],
-            ['name'=>'Cucumber Juice','category'=>'drink','price'=>70],
-            ['name'=>'Pandan Juice','category'=>'drink','price'=>70],
-            ['name'=>'Ginger Tea','category'=>'drink','price'=>50],
-            ['name'=>'Salabat','category'=>'drink','price'=>50],
-            ['name'=>'Kapeng Barako','category'=>'drink','price'=>60],
-            ['name'=>'Barako Coffee','category'=>'drink','price'=>60],
-            ['name'=>'Iced Barako Coffee','category'=>'drink','price'=>70],
-            ['name'=>'Tsokolate Eh','category'=>'drink','price'=>70],
-            ['name'=>'Tsokolate Ah','category'=>'drink','price'=>70],
-            ['name'=>'Sikwate','category'=>'drink','price'=>70],
+            ['name'=>'Tinola','category'=>'food','price'=>150,'description'=>'Chicken soup with ginger, green papaya and chili leaves.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Tinolalunch.jpg/640px-Tinolalunch.jpg'],
+
+            ['name'=>'Afritada','category'=>'food','price'=>150,'description'=>'Tomato based chicken stew with vegetables.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Chicken_afritada_with_pineapple_%28Philippines%29.jpg/640px-Chicken_afritada_with_pineapple_%28Philippines%29.jpg'],
+
+            ['name'=>'Menudo','category'=>'food','price'=>150,'description'=>'Pork stew with liver, potatoes and tomato sauce.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Pork_Menudo_%28Filipino_Pork_Stew%29.jpg/640px-Pork_Menudo_%28Filipino_Pork_Stew%29.jpg'],
+
+            ['name'=>'Mechado','category'=>'food','price'=>170,'description'=>'Beef stew cooked slowly in tomato sauce.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Cooked_mechado_2.JPG/640px-Cooked_mechado_2.JPG'],
+
+            ['name'=>'Kaldereta','category'=>'food','price'=>170,'description'=>'Rich goat or beef stew with liver spread and vegetables.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Beef_caldereta_from_the_Philippines.jpg/640px-Beef_caldereta_from_the_Philippines.jpg'],
+
+            ['name'=>'Bistek Tagalog','category'=>'food','price'=>170,'description'=>'Beef steak marinated in soy sauce with onions.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Bistek_Tagalog-02.jpg/640px-Bistek_Tagalog-02.jpg'],
+
+            ['name'=>'Sisig','category'=>'food','price'=>160,'description'=>'Sizzling pork dish seasoned with calamansi and chili.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Sisig_wikipedia.jpg/640px-Sisig_wikipedia.jpg'],
+
+            ['name'=>'Pinakbet','category'=>'food','price'=>120,'description'=>'Mixed vegetable dish flavored with shrimp paste.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Solaire_Resort_North_Food_court_11_January_2025_PinakbetE.jpg/640px-Solaire_Resort_North_Food_court_11_January_2025_PinakbetE.jpg'],
+
+            ['name'=>'Dinuguan','category'=>'food','price'=>140,'description'=>'Savory pork stew cooked in pig blood and vinegar.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Dinuguan_with_Sili.jpg/640px-Dinuguan_with_Sili.jpg'],
+
+            ['name'=>'Chicken Inasal','category'=>'food','price'=>170,'description'=>'Grilled chicken marinated in citrus and annatto oil.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/9780Chicken_Inasal_03.jpg/640px-9780Chicken_Inasal_03.jpg'],
+
+            ['name'=>'Crispy Pata','category'=>'food','price'=>300,'description'=>'Deep fried pork leg with crispy skin.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Patio_Filipino_crispy_pata.JPG/640px-Patio_Filipino_crispy_pata.JPG'],
+
+            ['name'=>'Fried Chicken Filipino Style','category'=>'food','price'=>150,'description'=>'Golden fried chicken seasoned Filipino style.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Fried_chicken_%2825163375255%29.jpg/640px-Fried_chicken_%2825163375255%29.jpg'],
+
+            ['name'=>'Fried Tilapia','category'=>'food','price'=>140,'description'=>'Whole tilapia fried until crispy.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Fried_Tilapia_Fish.jpg/640px-Fried_Tilapia_Fish.jpg'],
+
+            ['name'=>'Fried Bangus','category'=>'food','price'=>150,'description'=>'Milkfish fried to perfection.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/BONELESS_BANGUS_%284946233351%29.jpg/640px-BONELESS_BANGUS_%284946233351%29.jpg'],
+
+
+            /* DESSERTS */
+
+            ['name'=>'Halo-Halo','category'=>'dessert','price'=>120,'description'=>'Shaved ice dessert with fruits, beans and milk.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Halo_halo1.jpg/640px-Halo_halo1.jpg'],
+
+            ['name'=>'Mais Con Yelo','category'=>'dessert','price'=>100,'description'=>'Sweet corn dessert served with shaved ice and milk.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Mais_con_yelo.jpg/640px-Mais_con_yelo.jpg'],
+
+            ['name'=>'Taho','category'=>'dessert','price'=>50,'description'=>'Soft tofu dessert with syrup and tapioca pearls.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Taho%2C_Apr_2024.jpg/640px-Taho%2C_Apr_2024.jpg'],
+
+            ['name'=>'Leche Flan','category'=>'dessert','price'=>90,'description'=>'Creamy caramel custard dessert.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Leche_flan_Filipinas.jpg/640px-Leche_flan_Filipinas.jpg'],
+
+            ['name'=>'Ube Halaya','category'=>'dessert','price'=>120,'description'=>'Sweet purple yam jam dessert.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Ube_halaya_-_mashed_purple_yam_%28Philippines%29_02.jpg/640px-Ube_halaya_-_mashed_purple_yam_%28Philippines%29_02.jpg'],
+
+            ['name'=>'Mango Float','category'=>'dessert','price'=>140,'description'=>'Layered mango graham cake chilled to perfection.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Mango_float%2C_a_Filipino_icebox_cake_version_of_Crema_de_Fruta_02.jpg/640px-Mango_float%2C_a_Filipino_icebox_cake_version_of_Crema_de_Fruta_02.jpg'],
+
+            ['name'=>'Turon','category'=>'dessert','price'=>60,'description'=>'Banana wrapped in spring roll wrapper and fried with sugar.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Turon_with_ube_sauce_from_Filipino_Festival_at_the_Queen_Victoria_Market%2C_Melbourne.jpg/640px-Turon_with_ube_sauce_from_Filipino_Festival_at_the_Queen_Victoria_Market%2C_Melbourne.jpg'],
+
+
+            /* DRINKS */
+
+            ['name'=>'Kalamansi Juice','category'=>'drink','price'=>60,'description'=>'Refreshing citrus drink made from calamansi.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Calamansi_juice_%28Philippines%29.jpg/640px-Calamansi_juice_%28Philippines%29.jpg'],
+
+            ['name'=>'Buko Juice','category'=>'drink','price'=>70,'description'=>'Fresh coconut water served chilled.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Coconut_Drink%2C_Pangandaran.JPG/640px-Coconut_Drink%2C_Pangandaran.JPG'],
+
+            ['name'=>'Sago’t Gulaman','category'=>'drink','price'=>60,'description'=>'Sweet Filipino drink with tapioca pearls and jelly.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Sasa_asian_cuisine_merienda-14.jpg/640px-Sasa_asian_cuisine_merienda-14.jpg'],
+
+            ['name'=>'Mango Shake','category'=>'drink','price'=>80,'description'=>'Creamy mango smoothie with milk and ice.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Mango_shake.jpg/1920px-Mango_shake.jpg'],
+
+            ['name'=>'Avocado Shake','category'=>'drink','price'=>90,'description'=>'Smooth avocado drink blended with milk and sugar.','photo_url'=>'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Sa_sa_batido.jpeg/640px-Sa_sa_batido.jpeg'],
 
         ];
 
         foreach ($items as $item) {
+
             Item::create($item);
+
         }
 
     }

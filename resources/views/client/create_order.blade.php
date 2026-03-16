@@ -42,7 +42,9 @@ box-shadow:0 6px 18px rgba(0,0,0,0.05);
 height:70px;
 width:100%;
 object-fit:cover;
+object-position:center;
 border-radius:6px;
+background:#f5f5f5;
 }
 
 .remove-btn{
@@ -88,7 +90,7 @@ Create Catering Order
 
 
 
-{{-- CART ACTIONS (SEPARATE FORMS) --}}
+{{-- CART ACTIONS --}}
 
 <div class="d-flex justify-content-between align-items-center mb-3">
 
@@ -136,14 +138,18 @@ action="/client/cart/remove/{{$cart->id}}">
 @csrf
 
 <button class="btn btn-danger btn-sm remove-btn">
-✖
+<i class="bi bi-trash"></i>
 </button>
 
 </form>
 
 
-<img src="{{$cart->item->photo_url}}"
-class="cart-img">
+<img 
+src="{{$cart->item->photo_url}}"
+class="cart-img"
+loading="lazy"
+onerror="retryImage(this)"
+>
 
 
 <div class="mt-2 small">
@@ -189,7 +195,7 @@ Add to Cart
 
 
 
-{{-- ORDER FORM (COMPLETELY SEPARATE) --}}
+{{-- ORDER FORM --}}
 
 @if($cartItems->count())
 

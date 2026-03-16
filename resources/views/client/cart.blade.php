@@ -67,6 +67,13 @@ object-fit:cover;
 background:#f5f5f5;
 }
 
+.menu-img-modal{
+height:150px;
+width:100%;
+object-fit:cover;
+background:#f5f5f5;
+}
+
 .menu-body{
 padding:12px;
 }
@@ -351,7 +358,7 @@ Clear Cart
 <div class="modal-body text-center">
 
 <img src="{{$item->photo_url}}"
-style="width:100%; height:220px; object-fit:cover; border-radius:10px; margin-bottom:15px;">
+style="width:100%; max-height:500px; object-fit:cover; border-radius:10px; margin-bottom:15px;">
 
 <p class="text-muted">
 {{$item->description}}

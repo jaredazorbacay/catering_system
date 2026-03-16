@@ -73,46 +73,6 @@ font-size:14px;
 color:#6c757d;
 }
 
-/* SUCCESS MODAL */
-
-.checkmark-container{
-display:flex;
-justify-content:center;
-align-items:center;
-margin-top:10px;
-}
-
-.checkmark-circle{
-width:80px;
-height:80px;
-border-radius:50%;
-background:#d4edda;
-position:relative;
-animation:pop 0.4s ease;
-}
-
-.checkmark{
-position:absolute;
-left:24px;
-top:40px;
-width:25px;
-height:12px;
-border-left:5px solid #28a745;
-border-bottom:5px solid #28a745;
-transform:rotate(-45deg);
-animation:draw 0.4s ease forwards;
-}
-
-@keyframes pop{
-0%{transform:scale(0)}
-100%{transform:scale(1)}
-}
-
-@keyframes draw{
-0%{width:0;height:0}
-100%{width:25px;height:12px}
-}
-
 </style>
 
 </head>
@@ -138,16 +98,7 @@ animation:draw 0.4s ease forwards;
 <div class="modal-dialog modal-dialog-centered">
 <div class="modal-content text-center p-4">
 
-<div class="checkmark-container">
-
-<div class="checkmark-circle">
-<div class="checkmark"></div>
-</div>
-
-</div>
-
 <h4 class="mt-3 text-success">Success</h4>
-
 <p>{{ session('success') }}</p>
 
 <button class="btn btn-primary mt-2" data-bs-dismiss="modal">
@@ -173,6 +124,58 @@ successModal.show();
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<!-- SAFE IMAGE LOADER -->
+
+<script>
+
+function retryImage(img){
+
+    if(!img.dataset.retry){
+        img.dataset.retry = 0;
+    }
+
+    let retries = parseInt(img.dataset.retry);
+
+    if(retries < 3){
+
+        img.dataset.retry = retries + 1;
+
+        setTimeout(function(){
+
+            let src = img.src.split('?')[0];
+            img.src = src + '?reload=' + new Date().getTime();
+
+        },500);
+
+    }else{
+
+        img.src = "/images/food-placeholder.png";
+
+    }
+
+}
+
+document.addEventListener("DOMContentLoaded",function(){
+
+    const imgs = document.querySelectorAll("img[data-safe-img]");
+
+    imgs.forEach(function(img){
+
+        if(!img.complete || img.naturalHeight === 0){
+
+            setTimeout(function(){
+                retryImage(img);
+            },1000);
+
+        }
+
+    });
+
+});
+
+</script>
 
 </body>
 </html>

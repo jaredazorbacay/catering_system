@@ -64,6 +64,7 @@ box-shadow:0 10px 25px rgba(0,0,0,0.12);
 height:150px;
 width:100%;
 object-fit:cover;
+object-position:center;
 background:#f5f5f5;
 }
 
@@ -101,19 +102,6 @@ padding:20px;
 border-radius:12px;
 box-shadow:0 8px 25px rgba(0,0,0,0.15);
 z-index:999;
-}
-
-.qty-btn{
-background:#0a7f8a;
-border:none;
-color:white;
-width:35px;
-height:35px;
-border-radius:6px;
-}
-
-.qty-btn:hover{
-background:#086a73;
 }
 
 .add-btn{
@@ -157,7 +145,13 @@ Food
 data-bs-toggle="modal"
 data-bs-target="#itemModal{{$item->id}}">
 
-<img src="{{$item->photo_url}}" class="menu-img">
+<img
+src="{{$item->photo_url}}"
+class="menu-img"
+loading="lazy"
+data-safe-img="true"
+onerror="retryImage(this)"
+>
 
 <div class="menu-body">
 
@@ -201,7 +195,13 @@ Drinks
 data-bs-toggle="modal"
 data-bs-target="#itemModal{{$item->id}}">
 
-<img src="{{$item->photo_url}}" class="menu-img">
+<img
+src="{{$item->photo_url}}"
+class="menu-img"
+loading="lazy"
+data-safe-img="true"
+onerror="retryImage(this)"
+>
 
 <div class="menu-body">
 
@@ -245,7 +245,13 @@ Desserts
 data-bs-toggle="modal"
 data-bs-target="#itemModal{{$item->id}}">
 
-<img src="{{$item->photo_url}}" class="menu-img">
+<img
+src="{{$item->photo_url}}"
+class="menu-img"
+loading="lazy"
+data-safe-img="true"
+onerror="retryImage(this)"
+>
 
 <div class="menu-body">
 
@@ -270,7 +276,6 @@ data-bs-target="#itemModal{{$item->id}}">
 </div>
 
 </div>
-
 
 </div>
 
@@ -350,8 +355,13 @@ Clear Cart
 
 <div class="modal-body text-center">
 
-<img src="{{$item->photo_url}}"
-style="width:100%; height:220px; object-fit:cover; border-radius:10px; margin-bottom:15px;">
+<img
+src="{{$item->photo_url}}"
+style="width:100%;height:220px;object-fit:cover;border-radius:10px;margin-bottom:15px;"
+loading="lazy"
+data-safe-img="true"
+onerror="retryImage(this)"
+>
 
 <p class="text-muted">
 {{$item->description}}

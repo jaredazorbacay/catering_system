@@ -1,287 +1,260 @@
 @extends('layouts.app')
 
-@section('title','Create Order')
+@section('title', 'Create Order')
 
 @section('content')
 
-<style>
+    <style>
+        .card {
+            border: none;
+            border-radius: 14px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+        }
 
-.card{
-border:none;
-border-radius:14px;
-box-shadow:0 8px 25px rgba(0,0,0,0.06);
-}
+        .header-title {
+            font-weight: 600;
+            color: #0a7f8a;
+        }
 
-.header-title{
-font-weight:600;
-color:#0a7f8a;
-}
+        .form-control {
+            border-radius: 8px;
+        }
 
-.form-control{
-border-radius:8px;
-}
+        .create-btn {
+            background: #0a7f8a;
+            border: none;
+            color: white;
+            font-weight: 500;
+        }
 
-.create-btn{
-background:#0a7f8a;
-border:none;
-color:white;
-font-weight:500;
-}
+        .create-btn:hover {
+            background: #086a73;
+        }
 
-.create-btn:hover{
-background:#086a73;
-}
+        .cart-card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+        }
 
-.cart-card{
-border:none;
-border-radius:10px;
-box-shadow:0 6px 18px rgba(0,0,0,0.05);
-}
+        .cart-img {
+            height: 70px;
+            width: 100%;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 6px;
+            background: #f5f5f5;
+        }
 
-.cart-img{
-height:70px;
-width:100%;
-object-fit:cover;
-object-position:center;
-border-radius:6px;
-background:#f5f5f5;
-}
+        .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            padding: 4px 6px;
+        }
+    </style>
 
-.remove-btn{
-position:absolute;
-top:5px;
-right:5px;
-padding:4px 6px;
-}
 
-</style>
+    <div class="container py-5">
 
+        <div class="row justify-content-center">
 
-<div class="container py-5">
+            <div class="col-lg-10">
 
-<div class="row justify-content-center">
+                <div class="card p-4">
 
-<div class="col-lg-10">
+                    <h4 class="header-title mb-4">
+                        Create Catering Order
+                    </h4>
 
-<div class="card p-4">
 
-<h4 class="header-title mb-4">
-Create Catering Order
-</h4>
+                    @if ($errors->any())
 
+                        <div class="alert alert-danger">
 
-@if ($errors->any())
+                            <ul class="mb-0">
 
-<div class="alert alert-danger">
+                                @foreach ($errors->all() as $error)
 
-<ul class="mb-0">
+                                    <li>{{ $error }}</li>
 
-@foreach ($errors->all() as $error)
+                                @endforeach
 
-<li>{{ $error }}</li>
+                            </ul>
 
-@endforeach
+                        </div>
 
-</ul>
+                    @endif
 
-</div>
 
-@endif
 
+                    {{-- CART ACTIONS --}}
 
+                    <div class="d-flex justify-content-between align-items-center mb-3">
 
-{{-- CART ACTIONS --}}
+                        <h5 class="header-title">
+                            Selected Menu Items
+                        </h5>
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex gap-2">
 
-<h5 class="header-title">
-Selected Menu Items
-</h5>
+                            @if($cartItems->count())
 
-<div class="d-flex gap-2">
+                                <a href="/client/cart" class="btn btn-primary btn-sm">
+                                    Add More Items
+                                </a>
 
-@if($cartItems->count())
+                                <form method="POST" action="/client/cart/clear">
+                                    @csrf
+                                    <button class="btn btn-danger btn-sm">
+                                        Clear All
+                                    </button>
+                                </form>
 
-<a href="/client/cart" class="btn btn-primary btn-sm">
-Add More Items
-</a>
+                            @endif
 
-<form method="POST" action="/client/cart/clear">
-@csrf
-<button class="btn btn-danger btn-sm">
-Clear All
-</button>
-</form>
+                        </div>
 
-@endif
+                    </div>
 
-</div>
 
-</div>
 
+                    @if($cartItems->count())
 
+                        <div class="row">
 
-@if($cartItems->count())
+                            @foreach($cartItems as $cart)
 
-<div class="row">
+                                <div class="col-md-3 mb-3">
 
-@foreach($cartItems as $cart)
+                                    <div class="card cart-card p-2 position-relative">
 
-<div class="col-md-3 mb-3">
 
-<div class="card cart-card p-2 position-relative">
+                                        <form method="POST" action="/client/cart/remove/{{$cart->id}}">
 
+                                            @csrf
 
-<form method="POST"
-action="/client/cart/remove/{{$cart->id}}">
+                                            <button class="btn btn-danger btn-sm remove-btn">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
 
-@csrf
+                                        </form>
 
-<button class="btn btn-danger btn-sm remove-btn">
-<i class="bi bi-trash"></i>
-</button>
 
-</form>
+                                        <img src="{{$cart->item->photo_url}}" class="cart-img" loading="lazy"
+                                            onerror="retryImage(this)">
 
 
-<img 
-src="{{$cart->item->photo_url}}"
-class="cart-img"
-loading="lazy"
-onerror="retryImage(this)"
->
+                                        <div class="mt-2 small">
 
+                                            <strong>{{$cart->item->name}}</strong>
 
-<div class="mt-2 small">
+                                            <br>
 
-<strong>{{$cart->item->name}}</strong>
+                                            Qty: {{$cart->quantity}}
 
-<br>
+                                            <br>
 
-Qty: {{$cart->quantity}}
+                                            ₱{{$cart->item->price * $cart->quantity}}
 
-<br>
+                                        </div>
 
-₱{{$cart->item->price * $cart->quantity}}
+                                    </div>
 
-</div>
+                                </div>
 
-</div>
+                            @endforeach
 
-</div>
+                        </div>
 
-@endforeach
 
-</div>
+                        <hr>
 
+                        <h4 class="text-end">
+                            Total: ₱{{$total}}
+                        </h4>
 
-<hr>
+                    @else
 
-<h4 class="text-end">
-Total: ₱{{$total}}
-</h4>
+                        <p class="text-muted">
+                            No items in cart
+                        </p>
 
-@else
+                        <a href="/client/cart" class="btn btn-primary">
+                            Add to Cart
+                        </a>
 
-<p class="text-muted">
-No items in cart
-</p>
+                    @endif
 
-<a href="/client/cart" class="btn btn-primary">
-Add to Cart
-</a>
 
-@endif
 
+                    {{-- ORDER FORM --}}
 
+                    @if($cartItems->count())
 
-{{-- ORDER FORM --}}
+                        <form method="POST" action="/client/order/store">
 
-@if($cartItems->count())
+                            @csrf
 
-<form method="POST" action="/client/order/store">
 
-@csrf
+                            <div class="row mt-4">
 
+                                <div class="col-md-6">
 
-<div class="row mt-4">
+                                    <label class="form-label">Event Name</label>
 
-<div class="col-md-6">
+                                    <input type="text" name="event_name" class="form-control" required>
 
-<label class="form-label">Event Name</label>
+                                </div>
 
-<input
-type="text"
-name="event_name"
-class="form-control"
-required
->
+                                <div class="col-md-3">
 
-</div>
+                                    <label class="form-label">Event Date</label>
 
-<div class="col-md-3">
+                                    <input type="date" name="event_date" class="form-control" required>
 
-<label class="form-label">Event Date</label>
+                                </div>
 
-<input
-type="date"
-name="event_date"
-class="form-control"
-required
->
+                                <div class="col-md-3">
 
-</div>
+                                    <label class="form-label">Guests</label>
 
-<div class="col-md-3">
+                                    <input type="number" name="guest_count" class="form-control" required>
 
-<label class="form-label">Guests</label>
+                                </div>
 
-<input
-type="number"
-name="guest_count"
-class="form-control"
-required
->
+                            </div>
 
-</div>
 
-</div>
+                            <div class="mt-3">
 
+                                <label class="form-label">Event Location</label>
 
-<div class="mt-3">
+                                <input type="text" name="event_location" class="form-control" required>
 
-<label class="form-label">Event Location</label>
+                            </div>
 
-<input
-type="text"
-name="event_location"
-class="form-control"
-required
->
 
-</div>
+                            <div class="mt-4 text-end">
 
+                                <button class="btn create-btn px-4 py-2">
+                                    Submit Order
+                                </button>
 
-<div class="mt-4 text-end">
+                            </div>
 
-<button class="btn create-btn px-4 py-2">
-Submit Order
-</button>
 
-</div>
+                        </form>
 
+                    @endif
 
-</form>
 
-@endif
+                </div>
 
+            </div>
 
-</div>
+        </div>
 
-</div>
-
-</div>
-
-</div>
+    </div>
 
 @endsection

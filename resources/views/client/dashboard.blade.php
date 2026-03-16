@@ -1,466 +1,464 @@
 @extends('layouts.app')
 
-@section('title','Client Dashboard')
+@section('title', 'Client Dashboard')
 
 @section('content')
 
-<style>
+    <style>
+        /* PAGE BACKGROUND */
+
+        body {
+            background: #f6f8f9;
+        }
 
-/* PAGE BACKGROUND */
+        /* DASHBOARD CARDS */
 
-body{
-background:#f6f8f9;
-}
+        .dashboard-card {
+            border: none;
+            border-radius: 14px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+            background: white;
+        }
 
-/* DASHBOARD CARDS */
+        /* STAT CARDS */
 
-.dashboard-card{
-border:none;
-border-radius:14px;
-box-shadow:0 6px 18px rgba(0,0,0,0.05);
-background:white;
-}
+        .stat-card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            background: white;
+        }
 
-/* STAT CARDS */
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
 
-.stat-card{
-border:none;
-border-radius:12px;
-box-shadow:0 6px 18px rgba(0,0,0,0.05);
-padding:20px;
-background:white;
-}
+        /* BUTTON */
 
-.stat-number{
-font-size:28px;
-font-weight:700;
-color:#2c3e50;
-}
+        .quick-btn {
+            background: #0a7f8a;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
 
-/* BUTTON */
+        .quick-btn:hover {
+            background: #086a73;
+        }
 
-.quick-btn{
-background:#0a7f8a;
-border:none;
-color:white;
-padding:8px 16px;
-border-radius:8px;
-}
+        /* TABLE */
 
-.quick-btn:hover{
-background:#086a73;
-}
+        .order-row {
+            cursor: pointer;
+            transition: 0.2s;
+        }
 
-/* TABLE */
+        .order-row:hover {
+            background: #f1f7f8;
+        }
 
-.order-row{
-cursor:pointer;
-transition:0.2s;
-}
+        /* BADGES */
 
-.order-row:hover{
-background:#f1f7f8;
-}
+        .badge.bg-success {
+            background: #0a7f8a !important;
+        }
 
-/* BADGES */
+        .badge.bg-warning {
+            background: #ffc107 !important;
+        }
 
-.badge.bg-success{
-background:#0a7f8a !important;
-}
+        .badge.bg-danger {
+            background: #dc3545 !important;
+        }
 
-.badge.bg-warning{
-background:#ffc107 !important;
-}
+        /* MODAL */
 
-.badge.bg-danger{
-background:#dc3545 !important;
-}
+        .modal-content {
+            border-radius: 14px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
 
-/* MODAL */
+        .modal-header {
+            border-bottom: 1px solid #f1f1f1;
+        }
 
-.modal-content{
-border-radius:14px;
-border:none;
-box-shadow:0 10px 30px rgba(0,0,0,0.08);
-}
+        .modal-footer {
+            border-top: 1px solid #f1f1f1;
+        }
 
-.modal-header{
-border-bottom:1px solid #f1f1f1;
-}
+        /* MENU ITEMS */
 
-.modal-footer{
-border-top:1px solid #f1f1f1;
-}
+        .list-group-item {
+            border: none;
+            border-bottom: 1px solid #f1f1f1;
+        }
+    </style>
 
-/* MENU ITEMS */
 
-.list-group-item{
-border:none;
-border-bottom:1px solid #f1f1f1;
-}
+    <script>
+        setTimeout(function () {
+            let alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => alert.remove());
+        }, 3000);
+    </script>
 
-</style>
 
+    <div class="container py-4">
 
-<script>
-setTimeout(function(){
-let alerts = document.querySelectorAll('.alert');
-alerts.forEach(alert => alert.remove());
-},3000);
-</script>
+        <h3 class="mb-4" style="font-weight:700;color:#2c3e50;">
+            Client Dashboard
+        </h3>
 
 
-<div class="container py-4">
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
 
-<h3 class="mb-4" style="font-weight:700;color:#2c3e50;">
-Client Dashboard
-</h3>
 
+        {{-- STATISTICS --}}
 
-@if(session('success'))
-<div class="alert alert-success">
-{{ session('success') }}
-</div>
-@endif
+        <div class="row mb-4">
 
+            <div class="col-md-4 mb-3">
 
-{{-- STATISTICS --}}
+                <div class="stat-card">
 
-<div class="row mb-4">
+                    <div class="stat-number">
+                        {{ $totalOrders ?? 0 }}
+                    </div>
 
-<div class="col-md-4 mb-3">
+                    <div class="text-muted">
+                        Total Orders
+                    </div>
 
-<div class="stat-card">
+                </div>
 
-<div class="stat-number">
-{{ $totalOrders ?? 0 }}
-</div>
+            </div>
 
-<div class="text-muted">
-Total Orders
-</div>
 
-</div>
+            <div class="col-md-4 mb-3">
 
-</div>
+                <div class="stat-card">
 
+                    <div class="stat-number text-warning">
+                        {{ $pendingOrders ?? 0 }}
+                    </div>
 
-<div class="col-md-4 mb-3">
+                    <div class="text-muted">
+                        Pending Orders
+                    </div>
 
-<div class="stat-card">
+                </div>
 
-<div class="stat-number text-warning">
-{{ $pendingOrders ?? 0 }}
-</div>
+            </div>
 
-<div class="text-muted">
-Pending Orders
-</div>
 
-</div>
+            <div class="col-md-4 mb-3">
 
-</div>
+                <div class="stat-card">
 
+                    <div class="stat-number text-success">
+                        {{ $approvedOrders ?? 0 }}
+                    </div>
 
-<div class="col-md-4 mb-3">
+                    <div class="text-muted">
+                        Approved Orders
+                    </div>
 
-<div class="stat-card">
+                </div>
 
-<div class="stat-number text-success">
-{{ $approvedOrders ?? 0 }}
-</div>
+            </div>
 
-<div class="text-muted">
-Approved Orders
-</div>
+        </div>
 
-</div>
 
-</div>
+        {{-- QUICK ACTIONS --}}
 
-</div>
+        <div class="card dashboard-card p-4 mb-4">
 
+            <h5 class="mb-3">Quick Actions</h5>
 
-{{-- QUICK ACTIONS --}}
+            <div class="d-flex flex-wrap gap-2">
 
-<div class="card dashboard-card p-4 mb-4">
+                <a href="/client/order/create" class="btn quick-btn">
+                    Create New Order
+                </a>
 
-<h5 class="mb-3">Quick Actions</h5>
+                <a href="/client/orders" class="btn btn-outline-secondary">
+                    View My Orders
+                </a>
 
-<div class="d-flex flex-wrap gap-2">
+            </div>
 
-<a href="/client/order/create" class="btn quick-btn">
-Create New Order
-</a>
+        </div>
 
-<a href="/client/orders" class="btn btn-outline-secondary">
-View My Orders
-</a>
 
-</div>
+        {{-- RECENT ORDERS --}}
 
-</div>
+        <div class="card dashboard-card p-4">
 
+            <h5 class="mb-3">Recent Orders</h5>
 
-{{-- RECENT ORDERS --}}
+            <div class="table-responsive">
 
-<div class="card dashboard-card p-4">
+                <table class="table table-hover align-middle">
 
-<h5 class="mb-3">Recent Orders</h5>
+                    <thead>
 
-<div class="table-responsive">
+                        <tr>
+                            <th>Event</th>
+                            <th>Date</th>
+                            <th>Guests</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
 
-<table class="table table-hover align-middle">
+                    </thead>
 
-<thead>
+                    <tbody>
 
-<tr>
-<th>Event</th>
-<th>Date</th>
-<th>Guests</th>
-<th>Total</th>
-<th>Status</th>
-</tr>
+                        @if(isset($recentOrders) && count($recentOrders) > 0)
 
-</thead>
+                            @foreach($recentOrders as $order)
 
-<tbody>
+                                @php
+                                    $total = $order->items->sum(fn($i) => $i->price * $i->quantity);
+                                @endphp
 
-@if(isset($recentOrders) && count($recentOrders) > 0)
+                                <tr class="order-row" data-bs-toggle="modal" data-bs-target="#orderModal{{ $order->id }}">
 
-@foreach($recentOrders as $order)
+                                    <td>{{ $order->event_name }}</td>
 
-@php
-$total = $order->items->sum(fn($i) => $i->price * $i->quantity);
-@endphp
+                                    <td>{{ \Carbon\Carbon::parse($order->event_date)->format('M d, Y') }}</td>
 
-<tr class="order-row" data-bs-toggle="modal" data-bs-target="#orderModal{{ $order->id }}">
+                                    <td>{{ $order->guest_count }}</td>
 
-<td>{{ $order->event_name }}</td>
+                                    <td>
+                                        ₱{{ number_format($total, 2) }}
+                                    </td>
 
-<td>{{ \Carbon\Carbon::parse($order->event_date)->format('M d, Y') }}</td>
+                                    <td>
 
-<td>{{ $order->guest_count }}</td>
+                                        @if($order->status == 'pending')
 
-<td>
-₱{{ number_format($total,2) }}
-</td>
+                                            <span class="badge bg-warning text-dark">
+                                                Pending
+                                            </span>
 
-<td>
+                                        @elseif($order->status == 'approved')
 
-@if($order->status == 'pending')
+                                            <span class="badge bg-success">
+                                                Approved
+                                            </span>
 
-<span class="badge bg-warning text-dark">
-Pending
-</span>
+                                        @elseif($order->status == 'cancelled')
 
-@elseif($order->status == 'approved')
+                                            <span class="badge bg-danger">
+                                                Cancelled
+                                            </span>
 
-<span class="badge bg-success">
-Approved
-</span>
+                                        @else
 
-@elseif($order->status == 'cancelled')
+                                            <span class="badge bg-secondary">
+                                                {{ ucfirst($order->status) }}
+                                            </span>
 
-<span class="badge bg-danger">
-Cancelled
-</span>
+                                        @endif
 
-@else
+                                    </td>
 
-<span class="badge bg-secondary">
-{{ ucfirst($order->status) }}
-</span>
+                                </tr>
 
-@endif
+                            @endforeach
 
-</td>
+                        @else
 
-</tr>
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">
+                                    No orders yet
+                                </td>
+                            </tr>
 
-@endforeach
+                        @endif
 
-@else
+                    </tbody>
 
-<tr>
-<td colspan="5" class="text-center text-muted">
-No orders yet
-</td>
-</tr>
+                </table>
 
-@endif
+            </div>
 
-</tbody>
+        </div>
 
-</table>
+    </div>
 
-</div>
 
-</div>
+    {{-- ORDER DETAIL MODALS --}}
 
-</div>
+    @foreach($recentOrders as $order)
 
+        @php
+            $total = $order->items->sum(fn($i) => $i->price * $i->quantity);
+        @endphp
 
-{{-- ORDER DETAIL MODALS --}}
+        <div class="modal fade" id="orderModal{{ $order->id }}" tabindex="-1">
 
-@foreach($recentOrders as $order)
+            <div class="modal-dialog modal-lg modal-dialog-centered">
 
-@php
-$total = $order->items->sum(fn($i) => $i->price * $i->quantity);
-@endphp
+                <div class="modal-content">
 
-<div class="modal fade" id="orderModal{{ $order->id }}" tabindex="-1">
+                    <div class="modal-header">
 
-<div class="modal-dialog modal-lg modal-dialog-centered">
+                        <h5 class="modal-title">
+                            Order Details
+                        </h5>
 
-<div class="modal-content">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 
-<div class="modal-header">
+                    </div>
 
-<h5 class="modal-title">
-Order Details
-</h5>
 
-<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <div class="modal-body">
 
-</div>
+                        <div class="row mb-3">
 
+                            <div class="col-md-6">
+                                <strong>Event:</strong><br>
+                                {{ $order->event_name }}
+                            </div>
 
-<div class="modal-body">
+                            <div class="col-md-6">
+                                <strong>Date:</strong><br>
+                                {{ \Carbon\Carbon::parse($order->event_date)->format('M d, Y') }}
+                            </div>
 
-<div class="row mb-3">
+                        </div>
 
-<div class="col-md-6">
-<strong>Event:</strong><br>
-{{ $order->event_name }}
-</div>
 
-<div class="col-md-6">
-<strong>Date:</strong><br>
-{{ \Carbon\Carbon::parse($order->event_date)->format('M d, Y') }}
-</div>
+                        <div class="row mb-3">
 
-</div>
+                            <div class="col-md-6">
+                                <strong>Location:</strong><br>
+                                {{ $order->event_location }}
+                            </div>
 
+                            <div class="col-md-6">
+                                <strong>Guests:</strong><br>
+                                {{ $order->guest_count }}
+                            </div>
 
-<div class="row mb-3">
+                        </div>
 
-<div class="col-md-6">
-<strong>Location:</strong><br>
-{{ $order->event_location }}
-</div>
 
-<div class="col-md-6">
-<strong>Guests:</strong><br>
-{{ $order->guest_count }}
-</div>
+                        <div class="mb-3">
 
-</div>
+                            <strong>Status:</strong><br>
 
+                            @if($order->status == 'pending')
 
-<div class="mb-3">
+                                <span class="badge bg-warning text-dark">Pending</span>
 
-<strong>Status:</strong><br>
+                            @elseif($order->status == 'approved')
 
-@if($order->status == 'pending')
+                                <span class="badge bg-success">Approved</span>
 
-<span class="badge bg-warning text-dark">Pending</span>
+                            @elseif($order->status == 'cancelled')
 
-@elseif($order->status == 'approved')
+                                <span class="badge bg-danger">Cancelled</span>
 
-<span class="badge bg-success">Approved</span>
+                            @else
 
-@elseif($order->status == 'cancelled')
+                                <span class="badge bg-secondary">
+                                    {{ ucfirst($order->status) }}
+                                </span>
 
-<span class="badge bg-danger">Cancelled</span>
+                            @endif
 
-@else
+                        </div>
 
-<span class="badge bg-secondary">
-{{ ucfirst($order->status) }}
-</span>
 
-@endif
+                        <hr>
 
-</div>
 
+                        <h6 class="mb-3">Menu Items</h6>
 
-<hr>
+                        @if($order->items->count() > 0)
 
+                            <ul class="list-group">
 
-<h6 class="mb-3">Menu Items</h6>
+                                @foreach($order->items as $orderItem)
 
-@if($order->items->count() > 0)
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
 
-<ul class="list-group">
+                                        <div>
 
-@foreach($order->items as $orderItem)
+                                            <strong>{{ $orderItem->item->name }}</strong>
 
-<li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <br>
 
-<div>
+                                            <small class="text-muted">
+                                                Quantity: {{ $orderItem->quantity }}
+                                            </small>
 
-<strong>{{ $orderItem->item->name }}</strong>
+                                        </div>
 
-<br>
+                                        <span class="text-muted">
 
-<small class="text-muted">
-Quantity: {{ $orderItem->quantity }}
-</small>
+                                            ₱{{ number_format($orderItem->price * $orderItem->quantity, 2) }}
 
-</div>
+                                        </span>
 
-<span class="text-muted">
+                                    </li>
 
-₱{{ number_format($orderItem->price * $orderItem->quantity,2) }}
+                                @endforeach
 
-</span>
+                            </ul>
 
-</li>
+                        @else
 
-@endforeach
+                            <p class="text-muted">No menu items found.</p>
 
-</ul>
+                        @endif
 
-@else
 
-<p class="text-muted">No menu items found.</p>
+                        <hr>
 
-@endif
+                        <h5 class="text-end">
 
+                            Total:
+                            <strong>
 
-<hr>
+                                ₱{{ number_format($total, 2) }}
 
-<h5 class="text-end">
+                            </strong>
 
-Total:
-<strong>
+                        </h5>
 
-₱{{ number_format($total,2) }}
 
-</strong>
+                    </div>
 
-</h5>
 
+                    <div class="modal-footer">
 
-</div>
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
 
+                    </div>
 
-<div class="modal-footer">
+                </div>
 
-<button class="btn btn-secondary" data-bs-dismiss="modal">
-Close
-</button>
+            </div>
 
-</div>
+        </div>
 
-</div>
-
-</div>
-
-</div>
-
-@endforeach
+    @endforeach
 
 
 @endsection

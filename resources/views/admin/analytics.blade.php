@@ -1,266 +1,264 @@
 @extends('layouts.app')
 
-@section('title','Admin Analytics')
+@section('title', 'Admin Analytics')
 
 @section('content')
 
-<style>
+    <style>
+        /* PAGE BACKGROUND */
 
-/* PAGE BACKGROUND */
+        body {
+            background: #f6f8f9;
+        }
 
-body{
-background:#f6f8f9;
-}
+        /* GRID LAYOUT */
 
-/* GRID LAYOUT */
+        .analytics-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 25px;
+        }
 
-.analytics-container{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(420px,1fr));
-gap:25px;
-}
+        /* CARD */
 
-/* CARD */
+        .analytics-card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            background: white;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
 
-.analytics-card{
-border:none;
-border-radius:16px;
-box-shadow:0 6px 18px rgba(0,0,0,0.05);
-padding:25px;
-background:white;
-height:100%;
-display:flex;
-flex-direction:column;
-}
+        /* TITLES */
 
-/* TITLES */
+        .section-title {
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
 
-.section-title{
-font-weight:600;
-margin-bottom:20px;
-color:#2c3e50;
-}
+        /* CHART CONTAINER */
 
-/* CHART CONTAINER */
+        .chart-container {
+            flex: 1;
+            position: relative;
+            min-height: 280px;
+        }
 
-.chart-container{
-flex:1;
-position:relative;
-min-height:280px;
-}
+        /* CLIENT LIST */
 
-/* CLIENT LIST */
+        .clients-list {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
-.clients-list{
-flex:1;
-display:flex;
-flex-direction:column;
-justify-content:center;
-}
+        .list-group-item {
+            border: none;
+            border-bottom: 1px solid #f1f1f1;
+        }
 
-.list-group-item{
-border:none;
-border-bottom:1px solid #f1f1f1;
-}
+        .list-group-item:hover {
+            background: #f1f7f8;
+        }
 
-.list-group-item:hover{
-background:#f1f7f8;
-}
+        /* RESPONSIVE */
 
-/* RESPONSIVE */
+        @media(max-width:768px) {
 
-@media(max-width:768px){
+            .analytics-container {
+                grid-template-columns: 1fr;
+            }
 
-.analytics-container{
-grid-template-columns:1fr;
-}
+        }
+    </style>
 
-}
 
-</style>
+    <div class="container py-4">
 
+        <h2 class="mb-4" style="font-weight:700;color:#2c3e50;">
+            Analytics Dashboard
+        </h2>
 
-<div class="container py-4">
+        <div class="analytics-container">
 
-<h2 class="mb-4" style="font-weight:700;color:#2c3e50;">
-Analytics Dashboard
-</h2>
+            {{-- Orders Over Time --}}
 
-<div class="analytics-container">
+            <div class="analytics-card">
 
-{{-- Orders Over Time --}}
+                <h5 class="section-title">Orders Over Time</h5>
 
-<div class="analytics-card">
+                <div class="chart-container">
+                    <canvas id="ordersChart"></canvas>
+                </div>
 
-<h5 class="section-title">Orders Over Time</h5>
+            </div>
 
-<div class="chart-container">
-<canvas id="ordersChart"></canvas>
-</div>
 
-</div>
+            {{-- Status Distribution --}}
 
+            <div class="analytics-card">
 
-{{-- Status Distribution --}}
+                <h5 class="section-title">Order Status Distribution</h5>
 
-<div class="analytics-card">
+                <div class="chart-container">
+                    <canvas id="statusChart"></canvas>
+                </div>
 
-<h5 class="section-title">Order Status Distribution</h5>
+            </div>
 
-<div class="chart-container">
-<canvas id="statusChart"></canvas>
-</div>
 
-</div>
+            {{-- Popular Items --}}
 
+            <div class="analytics-card">
 
-{{-- Popular Items --}}
+                <h5 class="section-title">Most Popular Menu Items</h5>
 
-<div class="analytics-card">
+                <div class="chart-container">
+                    <canvas id="itemsChart"></canvas>
+                </div>
 
-<h5 class="section-title">Most Popular Menu Items</h5>
+            </div>
 
-<div class="chart-container">
-<canvas id="itemsChart"></canvas>
-</div>
 
-</div>
+            {{-- Most Active Clients --}}
 
+            <div class="analytics-card">
 
-{{-- Most Active Clients --}}
+                <h5 class="section-title">Most Active Clients</h5>
 
-<div class="analytics-card">
+                <div class="clients-list">
 
-<h5 class="section-title">Most Active Clients</h5>
+                    <ul class="list-group">
 
-<div class="clients-list">
+                        @foreach($topClients as $client)
 
-<ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between">
 
-@foreach($topClients as $client)
+                                {{ $client->user->name }}
 
-<li class="list-group-item d-flex justify-content-between">
+                                <span class="text-muted">{{ $client->total }} orders</span>
 
-{{ $client->user->name }}
+                            </li>
 
-<span class="text-muted">{{ $client->total }} orders</span>
+                        @endforeach
 
-</li>
+                    </ul>
 
-@endforeach
+                </div>
 
-</ul>
+            </div>
 
-</div>
 
-</div>
+        </div>
 
+    </div>
 
-</div>
 
-</div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <script>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        /* Orders Over Time */
 
-<script>
+        new Chart(document.getElementById('ordersChart'), {
 
-/* Orders Over Time */
+            type: 'line',
 
-new Chart(document.getElementById('ordersChart'),{
+            data: {
+                labels: {!! json_encode($ordersChartLabels) !!},
 
-type:'line',
+                datasets: [{
 
-data:{
-labels:{!! json_encode($ordersChartLabels) !!},
+                    label: 'Orders',
 
-datasets:[{
+                    data: {!! json_encode($ordersChartData) !!},
 
-label:'Orders',
+                    borderColor: '#0a7f8a',
 
-data:{!! json_encode($ordersChartData) !!},
+                    backgroundColor: 'rgba(10,127,138,0.15)',
 
-borderColor:'#0a7f8a',
+                    tension: 0.4,
 
-backgroundColor:'rgba(10,127,138,0.15)',
+                    fill: true
 
-tension:0.4,
+                }]
 
-fill:true
+            },
 
-}]
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
 
-},
+        });
 
-options:{
-responsive:true,
-maintainAspectRatio:false
-}
 
-});
+        /* Status Distribution */
 
+        new Chart(document.getElementById('statusChart'), {
 
-/* Status Distribution */
+            type: 'doughnut',
 
-new Chart(document.getElementById('statusChart'),{
+            data: {
 
-type:'doughnut',
+                labels: {!! json_encode($statusLabels) !!},
 
-data:{
+                datasets: [{
 
-labels:{!! json_encode($statusLabels) !!},
+                    data: {!! json_encode($statusData) !!},
 
-datasets:[{
+                    backgroundColor: [
+                        '#ffc107',   // pending
+                        '#0a7f8a',   // approved
+                        '#dc3545'    // cancelled
+                    ]
 
-data:{!! json_encode($statusData) !!},
+                }]
 
-backgroundColor:[
-'#ffc107',   // pending
-'#0a7f8a',   // approved
-'#dc3545'    // cancelled
-]
+            },
 
-}]
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
 
-},
+        });
 
-options:{
-responsive:true,
-maintainAspectRatio:false
-}
 
-});
+        /* Popular Items */
 
+        new Chart(document.getElementById('itemsChart'), {
 
-/* Popular Items */
+            type: 'bar',
 
-new Chart(document.getElementById('itemsChart'),{
+            data: {
 
-type:'bar',
+                labels: {!! json_encode($itemLabels) !!},
 
-data:{
+                datasets: [{
 
-labels:{!! json_encode($itemLabels) !!},
+                    label: 'Orders',
 
-datasets:[{
+                    data: {!! json_encode($itemData) !!},
 
-label:'Orders',
+                    backgroundColor: '#0a7f8a'
 
-data:{!! json_encode($itemData) !!},
+                }]
 
-backgroundColor:'#0a7f8a'
+            },
 
-}]
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
 
-},
+        });
 
-options:{
-responsive:true,
-maintainAspectRatio:false
-}
-
-});
-
-</script>
+    </script>
 
 @endsection

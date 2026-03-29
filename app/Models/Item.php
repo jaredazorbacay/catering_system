@@ -12,7 +12,8 @@ class Item extends Model
         'category',
         'price',
         'photo_url',
-        'description'
+        'description',
+        'serving'
     ];
 
 }

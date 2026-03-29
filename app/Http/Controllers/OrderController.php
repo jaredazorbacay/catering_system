@@ -141,4 +141,28 @@ public function store(Request $request)
 
     }
 
+    public function updatePayment(Request $request, $id)
+    {
+        echo "Hello";
+        $order = Order::with('items')->findOrFail($id);
+    
+        $request->validate([
+            'payment' => 'required|numeric|min:0'
+        ]);
+    
+        // ✅ SAME LOGIC AS BLADE (IMPORTANT)
+        $total = $order->items->sum(function ($item) {
+            return $item->price * $item->quantity;
+        });
+        
+    
+        $payment = $request->payment;
+    
+        $order->payment = $payment;
+    
+        $order->save();
+    
+        return back()->with('success', 'Payment updated successfully');
+    }
+
 }

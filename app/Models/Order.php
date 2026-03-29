@@ -14,7 +14,8 @@ class Order extends Model
         'event_location',
         'guest_count',
         'total_price',
-        'status'
+        'status',
+        'payment'
     ];
 
     public function user()

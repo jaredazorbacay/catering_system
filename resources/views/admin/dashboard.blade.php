@@ -4,473 +4,332 @@
 
 @section('content')
 
-    <style>
-        /* PAGE BACKGROUND */
+<style>
+body { background:#f6f8f9; }
 
-        body {
-            background: #f6f8f9;
-        }
+.dashboard-card{
+border:none;
+border-radius:14px;
+box-shadow:0 6px 18px rgba(0,0,0,0.05);
+background:white;
+}
 
-        /* DASHBOARD CARDS */
+.section-title{
+font-weight:600;
+margin-bottom:15px;
+color:#2c3e50;
+}
 
-        .dashboard-card {
-            border: none;
-            border-radius: 14px;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-            background: white;
-        }
+.quick-btn{
+background:#0a7f8a;
+border:none;
+color:white;
+padding:8px 16px;
+border-radius:8px;
+}
 
-        /* SECTION TITLE */
+.quick-btn:hover{
+background:#086a73;
+}
 
-        .section-title {
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: #2c3e50;
-        }
+.order-row{
+cursor:pointer;
+transition:0.2s;
+}
 
-        /* PRIMARY BUTTON */
+.order-row:hover{
+background:#f1f7f8;
+}
 
-        .quick-btn {
-            background: #0a7f8a;
-            border: none;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 8px;
-        }
+.badge.bg-success{ background:#0a7f8a !important; }
+.badge.bg-warning{ background:#ffc107 !important; }
+.badge.bg-danger{ background:#dc3545 !important; }
 
-        .quick-btn:hover {
-            background: #086a73;
-        }
+.modal-content{
+border-radius:14px;
+border:none;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
 
-        /* TABLE ROW */
+.list-group-item{
+border:none;
+border-bottom:1px solid #f1f1f1;
+}
+</style>
 
-        .order-row {
-            cursor: pointer;
-            transition: 0.2s;
-        }
 
-        .order-row:hover {
-            background: #f1f7f8;
-        }
+<div class="container py-4">
 
-        /* BADGES */
+<h3 class="mb-4" style="font-weight:700;color:#2c3e50;">
+Admin Dashboard
+</h3>
 
-        .badge.bg-success {
-            background: #0a7f8a !important;
-        }
+@if(session('success'))
+<div class="alert alert-success">
+{{ session('success') }}
+</div>
+@endif
 
-        .badge.bg-warning {
-            background: #ffc107 !important;
-        }
 
-        .badge.bg-danger {
-            background: #dc3545 !important;
-        }
+{{-- QUICK ACTIONS --}}
+<div class="card dashboard-card p-4 mb-4">
 
-        /* MODAL */
+<h5 class="section-title">Quick Actions</h5>
 
-        .modal-content {
-            border-radius: 14px;
-            border: none;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-        }
+<div class="d-flex flex-wrap gap-2">
+<a href="/admin/orders" class="btn quick-btn">View Orders</a>
+<a href="/admin/analytics" class="btn btn-outline-secondary">View Analytics</a>
+</div>
 
-        .modal-header {
-            border-bottom: 1px solid #f1f1f1;
-        }
+</div>
 
-        .modal-footer {
-            border-top: 1px solid #f1f1f1;
-        }
 
-        /* MENU LIST */
 
-        .list-group-item {
-            border: none;
-            border-bottom: 1px solid #f1f1f1;
-        }
-    </style>
+{{-- UPCOMING EVENTS --}}
+<div class="card dashboard-card p-4 mb-4">
 
+<h5 class="section-title">Upcoming Events</h5>
 
-    <div class="container py-4">
+<div class="table-responsive">
 
-        <h3 class="mb-4" style="font-weight:700;color:#2c3e50;">
-            Admin Dashboard
-        </h3>
+<table class="table table-hover align-middle">
 
+<thead>
+<tr>
+<th>Client</th>
+<th>Phone</th>
+<th>Event</th>
+<th>Date</th>
+<th>Guests</th>
+<th>Total</th>
+</tr>
+</thead>
 
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
+<tbody>
 
+@if($upcomingEvents->count())
 
-        {{-- QUICK ACTIONS --}}
+@foreach($upcomingEvents as $event)
 
-        <div class="card dashboard-card p-4 mb-4">
+@php
+$total = $event->items->sum(fn($i)=>$i->price*$i->quantity);
+@endphp
 
-            <h5 class="section-title">Quick Actions</h5>
+<tr class="order-row" data-bs-toggle="modal" data-bs-target="#orderModal{{$event->id}}">
+<td>{{ $event->user->name }}</td>
+<td>{{ $event->user->phone_number }}</td>
+<td>{{ $event->event_name }}</td>
+<td>{{ \Carbon\Carbon::parse($event->event_date)->format('M d, Y') }}</td>
+<td>{{ $event->guest_count }}</td>
+<td>₱{{ number_format($total,2) }}</td>
+</tr>
 
-            <div class="d-flex flex-wrap gap-2">
+@endforeach
 
-                <a href="/admin/orders" class="btn quick-btn">
-                    View Orders
-                </a>
+@else
 
-                <a href="/admin/analytics" class="btn btn-outline-secondary">
-                    View Analytics
-                </a>
+<tr>
+<td colspan="6" class="text-center text-muted">No upcoming events</td>
+</tr>
 
-            </div>
+@endif
 
-        </div>
+</tbody>
 
+</table>
 
+</div>
 
-        {{-- UPCOMING EVENTS --}}
+</div>
 
-        <div class="card dashboard-card p-4 mb-4">
 
-            <h5 class="section-title">Upcoming Events</h5>
 
-            <div class="table-responsive">
+{{-- EVENT HISTORY --}}
+<div class="card dashboard-card p-4">
 
-                <table class="table table-hover align-middle">
+<h5 class="section-title">Event History</h5>
 
-                    <thead>
+<div class="table-responsive">
 
-                        <tr>
-                            <th>Client</th>
-                            <th>Phone</th>
-                            <th>Event</th>
-                            <th>Date</th>
-                            <th>Guests</th>
-                            <th>Total</th>
-                        </tr>
+<table class="table table-hover align-middle">
 
-                    </thead>
+<thead>
+<tr>
+<th>Client</th>
+<th>Phone</th>
+<th>Event</th>
+<th>Date</th>
+<th>Total</th>
+<th>Status</th>
+</tr>
+</thead>
 
-                    <tbody>
+<tbody>
 
-                        @if($upcomingEvents->count())
+@if($pastEvents->count())
 
-                            @foreach($upcomingEvents as $event)
+@foreach($pastEvents as $event)
 
-                                @php
-                                    $total = $event->items->sum(fn($i) => $i->price * $i->quantity);
-                                @endphp
+@php
+$total = $event->items->sum(fn($i)=>$i->price*$i->quantity);
+@endphp
 
-                                <tr class="order-row" data-bs-toggle="modal" data-bs-target="#orderModal{{ $event->id }}">
+<tr class="order-row" data-bs-toggle="modal" data-bs-target="#orderModal{{$event->id}}">
+<td>{{ $event->user->name }}</td>
+<td>{{ $event->user->phone_number }}</td>
+<td>{{ $event->event_name }}</td>
+<td>{{ \Carbon\Carbon::parse($event->event_date)->format('M d, Y') }}</td>
+<td>₱{{ number_format($total,2) }}</td>
+<td><span class="badge bg-success">Finished</span></td>
+</tr>
 
-                                    <td>{{ $event->user->name }}</td>
-                                    <td>{{ $event->user->phone_number }}</td>
-                                    <td>{{ $event->event_name }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($event->event_date)->format('M d, Y') }}</td>
-                                    <td>{{ $event->guest_count }}</td>
-                                    <td>₱{{ number_format($total, 2) }}</td>
+@endforeach
 
-                                </tr>
+@else
 
-                            @endforeach
+<tr>
+<td colspan="6" class="text-center text-muted">No past events</td>
+</tr>
 
-                        @else
+@endif
 
-                            <tr>
-                                <td colspan="6" class="text-center text-muted">
-                                    No upcoming events
-                                </td>
-                            </tr>
+</tbody>
 
-                        @endif
+</table>
 
-                    </tbody>
+</div>
 
-                </table>
+</div>
 
-            </div>
+</div>
 
-        </div>
 
 
+{{-- MODALS --}}
+@foreach($upcomingEvents->merge($pastEvents)->unique('id') as $order)
 
-        {{-- EVENT HISTORY --}}
+@php
+$total = $order->items->sum(fn($i)=>$i->price*$i->quantity);
+$paid = $order->payment ?? 0;
+$balance = $total - $paid;
+@endphp
 
-        <div class="card dashboard-card p-4">
+<div class="modal fade" id="orderModal{{$order->id}}">
 
-            <h5 class="section-title">Event History</h5>
+<div class="modal-dialog modal-lg modal-dialog-centered">
+<div class="modal-content">
 
-            <div class="table-responsive">
+<div class="modal-header">
+<h5>Order Details</h5>
+<button class="btn-close" data-bs-dismiss="modal"></button>
+</div>
 
-                <table class="table table-hover align-middle">
+<div class="modal-body">
 
-                    <thead>
+{{-- DETAILS --}}
+<div class="row mb-3">
+<div class="col-md-6"><strong>Client:</strong><br>{{ $order->user->name }}</div>
+<div class="col-md-6"><strong>Phone:</strong><br>{{ $order->user->phone_number }}</div>
+</div>
 
-                        <tr>
-                            <th>Client</th>
-                            <th>Phone</th>
-                            <th>Event</th>
-                            <th>Date</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                        </tr>
+<div class="row mb-3">
+<div class="col-md-6"><strong>Event:</strong><br>{{ $order->event_name }}</div>
+<div class="col-md-6"><strong>Date:</strong><br>{{ \Carbon\Carbon::parse($order->event_date)->format('M d, Y') }}</div>
+</div>
 
-                    </thead>
+<div class="row mb-3">
+<div class="col-md-6"><strong>Location:</strong><br>{{ $order->event_location }}</div>
+<div class="col-md-6"><strong>Guests:</strong><br>{{ $order->guest_count }}</div>
+</div>
 
-                    <tbody>
+<hr>
 
-                        @if($pastEvents->count())
+<h6>Menu Items</h6>
 
-                            @foreach($pastEvents as $event)
+<ul class="list-group mb-3">
+@foreach($order->items as $item)
+<li class="list-group-item d-flex justify-content-between">
+<span>{{ $item->item->name }} (x{{ $item->quantity }})</span>
+<span>₱{{ number_format($item->price * $item->quantity,2) }}</span>
+</li>
+@endforeach
+</ul>
 
-                                @php
-                                    $total = $event->items->sum(fn($i) => $i->price * $i->quantity);
-                                @endphp
+<h5 class="text-end">Total: ₱{{ number_format($total,2) }}</h5>
 
-                                <tr class="order-row" data-bs-toggle="modal" data-bs-target="#orderModal{{ $event->id }}">
+<hr>
 
-                                    <td>{{ $event->user->name }}</td>
-                                    <td>{{ $event->user->phone_number }}</td>
-                                    <td>{{ $event->event_name }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($event->event_date)->format('M d, Y') }}</td>
-                                    <td>₱{{ number_format($total, 2) }}</td>
+{{-- PAYMENT --}}
+<h6>Payment</h6>
 
-                                    <td>
-                                        <span class="badge bg-success">Finished</span>
-                                    </td>
+<p>Paid: ₱{{ number_format($paid,2) }}</p>
+<p>Balance: ₱{{ number_format($balance,2) }}</p>
 
-                                </tr>
+@if($paid <= 0)
+<span class="badge bg-danger">Unpaid</span>
+@elseif($balance > 0)
+<span class="badge bg-warning text-dark">Partial</span>
+@else
+<span class="badge bg-success">Paid</span>
+@endif
 
-                            @endforeach
+<hr>
 
-                        @else
+{{-- 🚫 BLOCK PAYMENT --}}
+@if(!in_array($order->status,['pending','cancelled']))
 
-                            <tr>
-                                <td colspan="6" class="text-center text-muted">
-                                    No past events
-                                </td>
-                            </tr>
+<form method="POST" action="/admin/orders/{{$order->id}}/payment">
+@csrf
+<input type="number" name="payment" step="0.01" class="form-control mb-2" value="{{ $paid }}">
+<button class="btn btn-primary w-100 mb-2">Update Payment</button>
+</form>
 
-                        @endif
+<form method="POST" action="/admin/orders/{{$order->id}}/payment">
+@csrf
+<input type="hidden" name="payment" value="{{ $total }}">
+<button class="btn btn-success w-100">Complete Payment</button>
+</form>
 
-                    </tbody>
+@else
 
-                </table>
+<div class="alert alert-warning text-center">
+Payment can only be updated after approval
+</div>
 
-            </div>
+@endif
 
-        </div>
+</div>
 
-    </div>
 
+<div class="modal-footer d-flex justify-content-between">
 
+@if($order->status == 'pending')
 
-    {{-- ORDER DETAIL MODALS --}}
+<div class="d-flex gap-2">
 
-    @foreach($upcomingEvents->merge($pastEvents)->unique('id') as $order)
+<form method="POST" action="/admin/orders/{{$order->id}}/approve">
+@csrf
+<button class="btn btn-success">Approve Order</button>
+</form>
 
-        @php
-            $total = $order->items->sum(fn($i) => $i->price * $i->quantity);
-        @endphp
+<form method="POST" action="/admin/orders/{{$order->id}}/cancel">
+@csrf
+<button class="btn btn-danger">Cancel Order</button>
+</form>
 
-        <div class="modal fade" id="orderModal{{ $order->id }}" tabindex="-1">
+</div>
 
-            <div class="modal-dialog modal-lg modal-dialog-centered">
+@endif
 
-                <div class="modal-content">
+<button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
-                    <div class="modal-header">
+</div>
 
-                        <h5 class="modal-title">
-                            Order Details
-                        </h5>
+</div>
+</div>
 
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
 
-                    </div>
-
-
-                    <div class="modal-body">
-
-
-                        <div class="row mb-3">
-
-                            <div class="col-md-6">
-
-                                <strong>Client:</strong><br>
-                                {{ $order->user->name }}
-
-                            </div>
-
-                            <div class="col-md-6">
-
-                                <strong>Phone Number:</strong><br>
-                                {{ $order->user->phone_number }}
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="row mb-3">
-
-                            <div class="col-md-6">
-
-                                <strong>Event:</strong><br>
-                                {{ $order->event_name }}
-
-                            </div>
-
-                            <div class="col-md-6">
-
-                                <strong>Date:</strong><br>
-                                {{ \Carbon\Carbon::parse($order->event_date)->format('M d, Y') }}
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="row mb-3">
-
-                            <div class="col-md-6">
-
-                                <strong>Location:</strong><br>
-                                {{ $order->event_location }}
-
-                            </div>
-
-                            <div class="col-md-6">
-
-                                <strong>Guests:</strong><br>
-                                {{ $order->guest_count }}
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="row mb-3">
-
-                            <div class="col-md-6">
-
-                                <strong>Status:</strong><br>
-
-                                @if($order->status == 'pending')
-
-                                    <span class="badge bg-warning text-dark">Pending</span>
-
-                                @elseif($order->status == 'approved')
-
-                                    <span class="badge bg-success">Approved</span>
-
-                                @elseif($order->status == 'cancelled')
-
-                                    <span class="badge bg-danger">Cancelled</span>
-
-                                @else
-
-                                    <span class="badge bg-secondary">
-                                        {{ ucfirst($order->status) }}
-                                    </span>
-
-                                @endif
-
-                            </div>
-
-                        </div>
-
-
-                        <hr>
-
-
-                        <h6 class="mb-3">Menu Items</h6>
-
-                        @if($order->items->count())
-
-                            <ul class="list-group">
-
-                                @foreach($order->items as $orderItem)
-
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-
-                                        <div>
-
-                                            <strong>{{ $orderItem->item->name }}</strong>
-
-                                            <br>
-
-                                            <small class="text-muted">
-                                                Quantity: {{ $orderItem->quantity }}
-                                            </small>
-
-                                        </div>
-
-                                        <span class="text-muted">
-
-                                            ₱{{ number_format($orderItem->price * $orderItem->quantity, 2) }}
-
-                                        </span>
-
-                                    </li>
-
-                                @endforeach
-
-                            </ul>
-
-                        @else
-
-                            <p class="text-muted">No menu items found.</p>
-
-                        @endif
-
-
-                        <hr>
-
-                        <h5 class="text-end">
-
-                            Total:
-                            <strong>
-
-                                ₱{{ number_format($total, 2) }}
-
-                            </strong>
-
-                        </h5>
-
-
-                    </div>
-
-
-                    <div class="modal-footer">
-
-                        @if($order->status == 'pending')
-
-                            <form method="POST" action="/admin/orders/{{ $order->id }}/approve">
-                                @csrf
-                                <button class="btn btn-success">Approve Order</button>
-                            </form>
-
-                            <form method="POST" action="/admin/orders/{{ $order->id }}/cancel">
-                                @csrf
-                                <button class="btn btn-danger">Cancel Order</button>
-                            </form>
-
-                        @endif
-
-                        <button class="btn btn-secondary" data-bs-dismiss="modal">
-                            Close
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    @endforeach
-
+@endforeach
 
 @endsection

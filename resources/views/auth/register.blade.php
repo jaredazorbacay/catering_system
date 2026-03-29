@@ -4,269 +4,315 @@
 
 @section('content')
 
-    <style>
-        /* Remove layout spacing */
-        main.container {
-            max-width: 100% !important;
-            padding: 0 !important;
-            margin: 0 !important;
-        }
+<style>
 
-        /* Page layout */
+/* REMOVE DEFAULT CONTAINER LIMIT */
+main.container{
+    max-width:100% !important;
+    padding:0 !important;
+    margin:0 !important;
+}
 
-        .register-page {
-            height: calc(100vh - 110px);
-            display: flex;
-        }
+/* PAGE LAYOUT */
+.register-page{
+    min-height:calc(100vh - 110px);
+    display:flex;
+    flex-wrap:wrap;
+}
 
-        /* LEFT HERO SECTION */
+/* LEFT SIDE */
 
-        .register-left {
-            background: linear-gradient(135deg, #0a7f8a, #5bb6be);
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 80px;
-        }
+.register-left{
+    background:linear-gradient(135deg,#0a7f8a,#5bb6be);
+    color:white;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    padding:60px;
+    overflow-y:auto;
+}
 
-        .logo-img {
-            width: 260px;
-            margin-bottom: 30px;
-        }
+.logo-img{
+    width:240px;
+    margin-bottom:20px;
+}
 
-        .hero-title {
-            font-size: 38px;
-            font-weight: 700;
-        }
+.hero-title{
+    font-size:34px;
+    font-weight:700;
+}
 
-        .hero-text {
-            margin-top: 20px;
-            opacity: .9;
-        }
+.hero-text{
+    margin-top:15px;
+    opacity:.9;
+}
 
-        .hero-feature {
-            margin-top: 12px;
-            opacity: .9;
-        }
+/* MENU SHOWCASE */
 
-        /* RIGHT REGISTER FORM */
+.menu-showcase{
+    margin-top:25px;
+}
 
-        .register-right {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f6f8f9;
-        }
+.menu-scroll{
+    display:flex;
+    gap:12px;
+    overflow-x:auto;
+    padding-bottom:10px;
+}
 
-        .register-form {
-            width: 100%;
-            max-width: 420px;
-            padding: 10px;
-        }
+.menu-scroll::-webkit-scrollbar{
+    height:6px;
+}
 
-        /* Title */
+.menu-scroll::-webkit-scrollbar-thumb{
+    background:rgba(255,255,255,0.4);
+    border-radius:10px;
+}
 
-        .register-title {
-            font-weight: 700;
-            color: #2c3e50;
-        }
+.menu-item{
+    min-width:120px;
+    background:rgba(255,255,255,0.15);
+    border-radius:10px;
+    overflow:hidden;
+    backdrop-filter:blur(6px);
+    transition:0.2s;
+}
 
-        /* Inputs */
+.menu-item:hover{
+    transform:scale(1.05);
+}
 
-        .form-control {
-            border-radius: 10px;
-            padding: 12px 14px;
-            width: 100%;
-        }
+.menu-item img{
+    width:100%;
+    height:90px;
+    object-fit:cover;
+}
 
-        /* Register button */
+.menu-name{
+    font-size:12px;
+    padding:6px;
+    text-align:center;
+}
 
-        .register-btn {
-            background: #0a7f8a;
-            border: none;
-            color: white;
-            padding: 12px;
-            font-weight: 500;
-            border-radius: 10px;
-            width: 100%;
-        }
+/* RIGHT SIDE */
 
-        .register-btn:hover {
-            background: #086a73;
-        }
+.register-right{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#f6f8f9;
+}
 
-        /* MOBILE */
+.register-form{
+    width:100%;
+    max-width:420px;
+    padding:10px;
+}
 
-        @media(max-width:992px) {
+.register-title{
+    font-weight:700;
+    color:#2c3e50;
+}
 
-            .register-left {
-                display: none;
-            }
+.form-control{
+    border-radius:10px;
+    padding:12px 14px;
+    width:100%;
+}
 
-            .register-page {
-                height: auto;
-                padding-top: 80px;
-                padding-bottom: 60px;
-            }
+.register-btn{
+    background:#0a7f8a;
+    border:none;
+    color:white;
+    padding:12px;
+    font-weight:500;
+    border-radius:10px;
+    width:100%;
+}
 
-            .register-form {
-                max-width: 95%;
-                margin: auto;
-            }
+.register-btn:hover{
+    background:#086a73;
+}
 
-        }
-    </style>
+/* MOBILE */
+
+@media(max-width:992px){
+
+    .register-left{
+        display:none;
+    }
+
+    .register-page{
+        height:auto;
+        padding-top:80px;
+        padding-bottom:60px;
+    }
+
+    .register-form{
+        max-width:95%;
+        margin:auto;
+    }
+
+}
+
+</style>
+
+<script>
+setTimeout(function(){
+    let alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => alert.remove());
+},3000);
+</script>
+
+<div class="container-fluid p-0">
+
+<div class="row g-0 register-page">
+
+{{-- LEFT SIDE --}}
+
+<div class="col-lg-6 register-left">
 
 
-    <script>
-        setTimeout(function () {
-            let alerts = document.querySelectorAll('.alert');
-            alerts.forEach(alert => alert.remove());
-        }, 3000);
-    </script>
+<img src="{{ asset('images/logo.png') }}" class="logo-img">
+
+<h1 class="hero-title">
+    Join Zaylee's Bistro
+</h1>
+
+<p class="hero-text">
+    Create an account to start planning events with
+    <strong>Zaylee's Bistro by D' Lake</strong>.
+</p>
 
 
-    <div class="container-fluid p-0">
+{{-- FOOD --}}
+<div class="menu-showcase">
+    <h6>Food</h6>
 
-        <div class="row g-0 register-page">
-
-
-            {{-- LEFT SIDE BRAND --}}
-
-            <div class="col-lg-6 register-left">
-
-                <img src="{{ asset('images/logo.png') }}" class="logo-img">
-
-                <h1 class="hero-title">
-                    Join Zaylee's Bistro
-                </h1>
-
-                <p class="hero-text">
-
-                    Create an account to start planning events with
-                    <strong>Zaylee's Bistro by D' Lake</strong>.
-                    Book catering services, manage your orders, and experience seamless event planning.
-
-                </p>
-
-                <div class="hero-feature mt-4">
-                    ✔ Premium catering services
-                </div>
-
-                <div class="hero-feature">
-                    ✔ Elegant dining experiences
-                </div>
-
-                <div class="hero-feature">
-                    ✔ Seamless event booking
-                </div>
-
-                <div class="hero-feature">
-                    ✔ Real-time order tracking
-                </div>
-
+    <div class="menu-scroll">
+        @foreach($foods as $item)
+        <div class="menu-item">
+            <img src="{{ $item->photo_url }}"
+                 onerror="this.onerror=null;this.src='{{ asset('images/default-food.jpg') }}';">
+            <div class="menu-name">
+                {{ $item->name }}
             </div>
-
-
-
-            {{-- RIGHT SIDE REGISTER --}}
-
-            <div class="col-lg-6 register-right">
-
-                <div class="register-form">
-
-                    <h3 class="register-title mb-4 text-center">
-                        Create Your Account
-                    </h3>
-
-
-                    @if(session('success'))
-                        <div class="alert alert-success">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-
-                    @if(session('error'))
-                        <div class="alert alert-danger">
-                            <strong>Registration Error:</strong><br>
-                            {{ session('error') }}
-                        </div>
-                    @endif
-
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul class="mb-0">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
-
-                    <form method="POST" action="/register" autocomplete="off">
-
-                        @csrf
-
-                        <!-- Hidden autofill blockers -->
-                        <input type="text" style="display:none">
-                        <input type="password" style="display:none">
-
-
-                        <div class="mb-3">
-
-                            <input type="text" name="name" class="form-control w-100" placeholder="Full Name"
-                                autocomplete="off" required>
-
-                        </div>
-
-
-                        <div class="mb-3">
-
-                            <input type="text" name="phone_number" class="form-control w-100" placeholder="Phone Number"
-                                autocomplete="off" required>
-
-                        </div>
-
-
-                        <div class="mb-3">
-
-                            <input type="text" name="address" class="form-control w-100" placeholder="Address"
-                                autocomplete="off">
-
-                        </div>
-
-
-                        <div class="mb-4">
-
-                            <input type="password" name="password" class="form-control w-100" placeholder="Password"
-                                autocomplete="new-password" required>
-
-                        </div>
-
-
-                        <button class="btn register-btn w-100 mb-3">
-                            Create Account
-                        </button>
-
-
-                        <div class="text-center">
-
-                            Already have an account?
-
-                            <a href="/login">Login</a>
-
-                        </div>
-
-                    </form>
-
-                </div>
-
-            </div>
-
         </div>
-
+        @endforeach
     </div>
+</div>
+
+
+{{-- DRINKS --}}
+<div class="menu-showcase">
+    <h6>Drinks</h6>
+
+    <div class="menu-scroll">
+        @foreach($drinks as $item)
+        <div class="menu-item">
+            <img src="{{ $item->photo_url }}"
+                 onerror="this.onerror=null;this.src='{{ asset('images/default-food.jpg') }}';">
+            <div class="menu-name">
+                {{ $item->name }}
+            </div>
+        </div>
+        @endforeach
+    </div>
+</div>
+
+
+{{-- DESSERTS --}}
+<div class="menu-showcase">
+    <h6>Desserts</h6>
+
+    <div class="menu-scroll">
+        @foreach($desserts as $item)
+        <div class="menu-item">
+            <img src="{{ $item->photo_url }}"
+                 onerror="this.onerror=null;this.src='{{ asset('images/default-food.jpg') }}';">
+            <div class="menu-name">
+                {{ $item->name }}
+            </div>
+        </div>
+        @endforeach
+    </div>
+</div>
+
+
+</div>
+
+{{-- RIGHT SIDE --}}
+
+<div class="col-lg-6 register-right">
+
+<div class="register-form">
+
+
+<h3 class="register-title mb-4 text-center">
+    Create Your Account
+</h3>
+
+@if(session('success'))
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
+@endif
+
+@if(session('error'))
+<div class="alert alert-danger">
+    <strong>Registration Error:</strong><br>
+    {{ session('error') }}
+</div>
+@endif
+
+@if ($errors->any())
+<div class="alert alert-danger">
+    <ul class="mb-0">
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
+
+<form method="POST" action="/register">
+
+    @csrf
+
+    <div class="mb-3">
+        <input type="text" name="name" class="form-control" placeholder="Full Name" required>
+    </div>
+
+    <div class="mb-3">
+        <input type="text" name="phone_number" class="form-control" placeholder="Phone Number" required>
+    </div>
+
+    <div class="mb-3">
+        <input type="text" name="address" class="form-control" placeholder="Address">
+    </div>
+
+    <div class="mb-4">
+        <input type="password" name="password" class="form-control" placeholder="Password" required>
+    </div>
+
+    <button class="btn register-btn mb-3">
+        Create Account
+    </button>
+
+    <div class="text-center">
+        Already have an account?
+        <a href="/login">Login</a>
+    </div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 @endsection

@@ -15,14 +15,23 @@ class AuthController extends Controller
     {
         Log::info('Login page accessed');
 
-        return view('auth.login');
+        return view('auth.login', [
+            'foods' => \App\Models\Item::where('category','food')->take(100)->get(),
+            'drinks' => \App\Models\Item::where('category','drink')->take(100)->get(),
+            'desserts' => \App\Models\Item::where('category','dessert')->take(100)->get(),
+        ]);
+        
     }
 
     public function showRegister()
     {
         Log::info('Register page accessed');
 
-        return view('auth.register');
+        return view('auth.register', [
+            'foods' => \App\Models\Item::where('category','food')->take(100)->get(),
+            'drinks' => \App\Models\Item::where('category','drink')->take(100)->get(),
+            'desserts' => \App\Models\Item::where('category','dessert')->take(100)->get(),
+        ]);
     }
 
     public function register(Request $request)
@@ -174,4 +183,6 @@ class AuthController extends Controller
 
         return back()->with('error','Invalid admin credentials');
     }
+
+    
 }

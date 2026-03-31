@@ -19,61 +19,71 @@ border-bottom:2px solid #e8f7f8;
 padding-bottom:5px;
 }
 
-/* SCROLLABLE MENU COLUMN */
+/* HORIZONTAL MENU ROW */
 
-.menu-column{
-height:70vh;
-overflow-y:auto;
-padding-right:5px;
+.menu-row{
+display:flex;
+gap:15px;
+overflow-x:auto;
+padding-bottom:10px;
 }
 
-/* EXTRA SPACE FOR DESSERT COLUMN */
-
-.dessert-column{
-padding-bottom:33vh;
+.menu-row::-webkit-scrollbar{
+height:6px;
 }
 
-/* SCROLLBAR */
-
-.menu-column::-webkit-scrollbar{
-width:6px;
-}
-
-.menu-column::-webkit-scrollbar-thumb{
+.menu-row::-webkit-scrollbar-thumb{
 background:#d9e8ea;
 border-radius:10px;
 }
 
-/* MENU CARD */
+/* CARD */
 
 .menu-card{
+min-width:220px;
+flex-shrink:0;
 border:none;
 border-radius:12px;
 box-shadow:0 6px 18px rgba(0,0,0,0.06);
-transition:0.2s;
 cursor:pointer;
 overflow:hidden;
+transition:0.2s;
+background:white;
+}
+
+.horizontal-spacer{
+min-height:250px;
+flex-shrink:0;
+border:none;
+border-radius:12px;
+box-shadow:0 6px 18px rgba(0,0,0,0.06);
+cursor:pointer;
+overflow:hidden;
+transition:0.2s;
+background:white;
+opacity: 0;
 }
 
 .menu-card:hover{
-transform:translateY(-3px);
+transform:translateY(-4px);
 box-shadow:0 10px 25px rgba(0,0,0,0.12);
 }
 
-/* IMAGE WRAPPER */
+/* IMAGE */
+
 .menu-img-wrapper{
 position:relative;
 }
 
-/* IMAGE */
 .menu-img{
-height:150px;
+height:170px;
 width:100%;
 object-fit:cover;
 background:#f5f5f5;
 }
 
 /* SERVING BADGE */
+
 .serving-badge{
 position:absolute;
 bottom:8px;
@@ -83,16 +93,9 @@ color:white;
 padding:4px 8px;
 border-radius:6px;
 font-size:11px;
-font-weight:500;
 }
 
-/* MODAL IMAGE (kept original but ensured consistency) */
-.menu-img-modal{
-height:150px;
-width:100%;
-object-fit:cover;
-background:#f5f5f5;
-}
+/* BODY */
 
 .menu-body{
 padding:12px;
@@ -110,12 +113,6 @@ font-weight:600;
 font-size:13px;
 }
 
-.menu-desc{
-font-size:12px;
-color:#777;
-margin-top:4px;
-}
-
 /* FLOATING CART */
 
 .cart-summary{
@@ -128,19 +125,6 @@ padding:20px;
 border-radius:12px;
 box-shadow:0 8px 25px rgba(0,0,0,0.15);
 z-index:999;
-}
-
-.qty-btn{
-background:#0a7f8a;
-border:none;
-color:white;
-width:35px;
-height:35px;
-border-radius:6px;
-}
-
-.qty-btn:hover{
-background:#086a73;
 }
 
 .add-btn{
@@ -159,50 +143,42 @@ background:#086a73;
 </style>
 
 
-<div class="container py-4">
+<div class="container mb-32">
 
 <h3 class="page-title mb-4">
 Select Menu Items
 </h3>
 
-<div class="row">
 
+{{-- FOOD --}}
+<div class="mb-4">
 
-{{-- FOOD COLUMN --}}
-<div class="col-lg-4">
+<div class="section-title">Food</div>
 
-<div class="section-title">
-Food
-</div>
-
-<div class="menu-column">
+<div class="menu-row">
 
 @foreach($foods as $item)
 
-<div class="card menu-card mb-3"
+<div class="menu-card"
 data-bs-toggle="modal"
 data-bs-target="#itemModal{{$item->id}}">
 
 <div class="menu-img-wrapper">
+
 <img src="{{$item->photo_url}}" class="menu-img">
 
 <div class="serving-badge">
 👥 Good for {{$item->serving}}
 </div>
+
 </div>
 
 <div class="menu-body">
 
-<div class="menu-name">
-{{$item->name}}
-</div>
+<div class="menu-name">{{$item->name}}</div>
 
 <div class="menu-price">
 ₱{{$item->price}}
-</div>
-
-<div class="menu-desc">
-{{ Str::limit($item->description,60) }}
 </div>
 
 </div>
@@ -216,42 +192,35 @@ data-bs-target="#itemModal{{$item->id}}">
 </div>
 
 
+{{-- DRINKS --}}
+<div class="mb-4">
 
-{{-- DRINKS COLUMN --}}
-<div class="col-lg-4">
+<div class="section-title">Drinks</div>
 
-<div class="section-title">
-Drinks
-</div>
-
-<div class="menu-column">
+<div class="menu-row">
 
 @foreach($drinks as $item)
 
-<div class="card menu-card mb-3"
+<div class="menu-card"
 data-bs-toggle="modal"
 data-bs-target="#itemModal{{$item->id}}">
 
 <div class="menu-img-wrapper">
+
 <img src="{{$item->photo_url}}" class="menu-img">
 
 <div class="serving-badge">
 👥 Good for {{$item->serving}}
 </div>
+
 </div>
 
 <div class="menu-body">
 
-<div class="menu-name">
-{{$item->name}}
-</div>
+<div class="menu-name">{{$item->name}}</div>
 
 <div class="menu-price">
 ₱{{$item->price}}
-</div>
-
-<div class="menu-desc">
-{{ Str::limit($item->description,60) }}
 </div>
 
 </div>
@@ -265,42 +234,35 @@ data-bs-target="#itemModal{{$item->id}}">
 </div>
 
 
+{{-- DESSERTS --}}
+<div class="mb-4">
 
-{{-- DESSERTS COLUMN --}}
-<div class="col-lg-4">
+<div class="section-title">Desserts</div>
 
-<div class="section-title">
-Desserts
-</div>
-
-<div class="menu-column dessert-column">
+<div class="menu-row">
 
 @foreach($desserts as $item)
 
-<div class="card menu-card mb-3"
+<div class="menu-card"
 data-bs-toggle="modal"
 data-bs-target="#itemModal{{$item->id}}">
 
 <div class="menu-img-wrapper">
+
 <img src="{{$item->photo_url}}" class="menu-img">
 
 <div class="serving-badge">
 👥 Good for {{$item->serving}}
 </div>
+
 </div>
 
 <div class="menu-body">
 
-<div class="menu-name">
-{{$item->name}}
-</div>
+<div class="menu-name">{{$item->name}}</div>
 
 <div class="menu-price">
 ₱{{$item->price}}
-</div>
-
-<div class="menu-desc">
-{{ Str::limit($item->description,60) }}
 </div>
 
 </div>
@@ -313,12 +275,13 @@ data-bs-target="#itemModal{{$item->id}}">
 
 </div>
 
+</div>
+
 
 </div>
 
 
-
-{{-- FLOATING CART SUMMARY --}}
+{{-- FLOATING CART --}}
 <div class="cart-summary">
 
 <h6 class="mb-3">Cart Summary</h6>
@@ -328,15 +291,8 @@ data-bs-target="#itemModal{{$item->id}}">
 @foreach($cartItems as $cart)
 
 <div class="d-flex justify-content-between small mb-2">
-
-<span>
-{{$cart->item->name}} x {{$cart->quantity}}
-</span>
-
-<span>
-₱{{$cart->item->price * $cart->quantity}}
-</span>
-
+<span>{{$cart->item->name}} x {{$cart->quantity}}</span>
+<span>₱{{$cart->item->price * $cart->quantity}}</span>
 </div>
 
 @endforeach
@@ -367,35 +323,25 @@ Clear Cart
 </div>
 
 
-
-{{-- ITEM MODALS --}}
+{{-- MODALS --}}
 @foreach($foods->merge($drinks)->merge($desserts) as $item)
 
 <div class="modal fade" id="itemModal{{$item->id}}" tabindex="-1">
 
 <div class="modal-dialog modal-dialog-centered">
-
 <div class="modal-content">
 
 <div class="modal-header">
-
-<h5 class="modal-title">
-{{$item->name}}
-</h5>
-
-<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-
+<h5 class="modal-title">{{$item->name}}</h5>
+<button class="btn-close" data-bs-dismiss="modal"></button>
 </div>
-
 
 <div class="modal-body text-center">
 
 <img src="{{$item->photo_url}}"
 style="width:100%; max-height:500px; object-fit:cover; border-radius:10px; margin-bottom:15px;">
 
-<p class="text-muted">
-{{$item->description}}
-</p>
+<p class="text-muted">{{$item->description}}</p>
 
 <h5 style="color:#0a7f8a">
 ₱{{$item->price}}
@@ -405,36 +351,26 @@ style="width:100%; max-height:500px; object-fit:cover; border-radius:10px; margi
 👥 Good for {{$item->serving}} people
 </p>
 
-
 <form method="POST" action="/client/cart/add">
-
 @csrf
 
 <input type="hidden" name="item_id" value="{{$item->id}}">
 
 <div class="d-flex justify-content-center align-items-center mb-3">
 
-<button type="button"
-class="btn btn-outline-secondary"
-onclick="decreaseQty({{$item->id}})">
--
-</button>
+<button type="button" class="btn btn-outline-secondary"
+onclick="decreaseQty({{$item->id}})">-</button>
 
-<input
-type="number"
+<input type="number"
 name="quantity"
 id="qty{{$item->id}}"
 value="1"
 min="1"
 class="form-control text-center mx-2"
-style="width:80px"
->
+style="width:80px">
 
-<button type="button"
-class="btn btn-outline-secondary"
-onclick="increaseQty({{$item->id}})">
-+
-</button>
+<button type="button" class="btn btn-outline-secondary"
+onclick="increaseQty({{$item->id}})">+</button>
 
 </div>
 
@@ -447,14 +383,13 @@ Add to Cart
 </div>
 
 </div>
-
 </div>
 
 </div>
 
 @endforeach
 
-
+<div class="horizontal-spacer"></div>
 
 <script>
 

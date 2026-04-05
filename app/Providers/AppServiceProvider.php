@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+
+use Illuminate\Support\Facades\Auth;
+use App\Models\Message;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -18,7 +21,18 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
     public function boot(): void
-    {
-        //
-    }
+{
+    view()->composer('*', function ($view) {
+
+        $messageCount = 0;
+
+        if (Auth::check() && Auth::user()->role === 'client') {
+            $messageCount = Message::where('user_id',Auth::id())
+            ->where('is_read',false)
+            ->count();
+        }
+
+        $view->with('messageCount', $messageCount);
+    });
+}
 }

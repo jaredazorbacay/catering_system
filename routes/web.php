@@ -8,7 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CartController;
-
+use App\Http\Controllers\MessageController;
 /*
 |--------------------------------------------------------------------------
 | Home (Landing Page)
@@ -91,6 +91,8 @@ Route::middleware(['auth','client'])->group(function(){
     Route::post('/client/cart/update',[CartController::class,'update']);
     Route::post('/client/cart/remove/{id}',[CartController::class,'remove']);
     Route::post('/client/cart/clear',[CartController::class,'clear']);
+    Route::get('/client/inbox',[MessageController::class,'index']);
+    Route::post('/client/inbox/read',[MessageController::class,'markAsRead']);
 
 });
 

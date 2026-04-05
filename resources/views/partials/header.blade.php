@@ -48,6 +48,33 @@
                                    <a class="nav-link text-white" href="/client/orders">My Orders</a>
                               </li>
 
+
+
+                              <li class="nav-item position-relative">
+
+                                   <a href="/client/inbox" class="nav-link">
+                                        Inbox
+                                   </a>
+
+                                   @if($messageCount > 0)
+
+                                        <span style="
+                                                            position:absolute;
+                                                            top:2px;
+                                                            right:5px;
+                                                            background:red;
+                                                            color:white;
+                                                            font-size:11px;
+                                                            padding:2px 6px;
+                                                            border-radius:50%;
+                                                            ">
+                                             {{ $messageCount }}
+                                        </span>
+
+                                   @endif
+
+                              </li>
+
                          @endif
 
                     @endif

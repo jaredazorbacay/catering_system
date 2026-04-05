@@ -275,11 +275,18 @@ Approve Order
 </button>
 </form>
 
-<form method="POST" action="/admin/orders/{{$order->id}}/cancel">
+<form method="POST" action="/admin/orders/{{ $order->id }}/cancel">
 @csrf
-<button class="btn btn-danger">
+
+<textarea name="message"
+class="form-control mb-2"
+placeholder="Reason for cancellation..."
+required></textarea>
+
+<button class="btn btn-danger w-100">
 Cancel Order
 </button>
+
 </form>
 
 </div>

@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Cart;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Item;
+use App\Models\Message;
 use App\Models\OrderItem;
 
 class OrderController extends Controller
@@ -123,23 +124,25 @@ public function store(Request $request)
 
 
 
-    public function cancel($id)
-    {
+    public function cancel(Request $request, $id)
+{
+    $order = Order::findOrFail($id);
 
-        $order = Order::findOrFail($id);
-
-        if($order->status != 'pending'){
-
-            return back()->with('error','Only pending orders can be cancelled');
-
-        }
-
-        $order->status = 'cancelled';
-        $order->save();
-
-        return back()->with('success','Order cancelled successfully');
-
+    if($order->status != 'pending'){
+        return back()->with('error','Only pending orders can be cancelled');
     }
+
+    $order->status = 'cancelled';
+    $order->save();
+
+    Message::create([
+        'user_id' => $order->user_id,
+        'order_id' => $order->id,
+        'message' => $request->message
+    ]);
+
+    return back()->with('success','Order cancelled & message sent');
+}
 
     public function updatePayment(Request $request, $id)
     {

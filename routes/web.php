@@ -30,9 +30,9 @@ Route::get('/', function () {
     }
 
     // NOT logged in → show landing page
-    $foods = Item::where('category','food')->take(10)->get();
-    $drinks = Item::where('category','drink')->take(10)->get();
-    $desserts = Item::where('category','dessert')->take(10)->get();
+    $foods = Item::where('category','food')->take(100)->get();
+    $drinks = Item::where('category','drink')->take(100)->get();
+    $desserts = Item::where('category','dessert')->take(100)->get();
 
     return view('index', compact('foods','drinks','desserts'));
 });

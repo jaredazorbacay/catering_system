@@ -19,29 +19,17 @@ border-bottom:2px solid #e8f7f8;
 padding-bottom:5px;
 }
 
-/* HORIZONTAL MENU ROW */
+/* GRID LAYOUT */
 
-.menu-row{
-display:flex;
-gap:15px;
-overflow-x:auto;
-padding-bottom:10px;
-}
-
-.menu-row::-webkit-scrollbar{
-height:6px;
-}
-
-.menu-row::-webkit-scrollbar-thumb{
-background:#d9e8ea;
-border-radius:10px;
+.menu-grid{
+display:grid;
+grid-template-columns:repeat(auto-fill, minmax(220px,1fr));
+gap:20px;
 }
 
 /* CARD */
 
 .menu-card{
-min-width:220px;
-flex-shrink:0;
 border:none;
 border-radius:12px;
 box-shadow:0 6px 18px rgba(0,0,0,0.06);
@@ -49,19 +37,6 @@ cursor:pointer;
 overflow:hidden;
 transition:0.2s;
 background:white;
-}
-
-.horizontal-spacer{
-min-height:250px;
-flex-shrink:0;
-border:none;
-border-radius:12px;
-box-shadow:0 6px 18px rgba(0,0,0,0.06);
-cursor:pointer;
-overflow:hidden;
-transition:0.2s;
-background:white;
-opacity: 0;
 }
 
 .menu-card:hover{
@@ -143,7 +118,7 @@ background:#086a73;
 </style>
 
 
-<div class="container mb-32">
+<div class="container pb-5">
 
 <h3 class="page-title mb-4">
 Select Menu Items
@@ -151,11 +126,11 @@ Select Menu Items
 
 
 {{-- FOOD --}}
-<div class="mb-4">
+<div class="mb-5">
 
 <div class="section-title">Food</div>
 
-<div class="menu-row">
+<div class="menu-grid">
 
 @foreach($foods as $item)
 
@@ -193,11 +168,11 @@ data-bs-target="#itemModal{{$item->id}}">
 
 
 {{-- DRINKS --}}
-<div class="mb-4">
+<div class="mb-5">
 
 <div class="section-title">Drinks</div>
 
-<div class="menu-row">
+<div class="menu-grid">
 
 @foreach($drinks as $item)
 
@@ -235,11 +210,11 @@ data-bs-target="#itemModal{{$item->id}}">
 
 
 {{-- DESSERTS --}}
-<div class="mb-4">
+<div class="mb-5">
 
 <div class="section-title">Desserts</div>
 
-<div class="menu-row">
+<div class="menu-grid">
 
 @foreach($desserts as $item)
 
@@ -270,8 +245,6 @@ data-bs-target="#itemModal{{$item->id}}">
 </div>
 
 @endforeach
-
-</div>
 
 </div>
 
@@ -389,7 +362,6 @@ Add to Cart
 
 @endforeach
 
-<div class="horizontal-spacer"></div>
 
 <script>
 

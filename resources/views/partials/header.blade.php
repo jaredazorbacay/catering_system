@@ -32,6 +32,10 @@
                                    <a class="nav-link text-white" href="/admin/analytics">Analytics</a>
                               </li>
 
+                              <li class="nav-item">
+                                   <a class="nav-link text-white" href="/admin/items">Manage Menu</a>
+                              </li>
+
                          @endif
 
                          @if(Auth::user()->role == 'client')

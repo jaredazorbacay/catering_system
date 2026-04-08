@@ -9,6 +9,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\ItemController;
 /*
 |--------------------------------------------------------------------------
 | Home (Landing Page)
@@ -114,5 +115,6 @@ Route::middleware(['auth','admin'])->group(function(){
 
     Route::get('/admin/analytics',[DashboardController::class,'analytics']);
     Route::post('/admin/orders/{id}/payment',[OrderController::class,'updatePayment']);
-
+    Route::post('/admin/items/{id}/update',[ItemController::class,'update']);
+    Route::get('/admin/items',[ItemController::class,'index']);
 });

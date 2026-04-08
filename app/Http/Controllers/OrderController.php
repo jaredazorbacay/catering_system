@@ -168,4 +168,24 @@ public function store(Request $request)
         return back()->with('success', 'Payment updated successfully');
     }
 
+    public function clientCancel($id)
+    {
+        $order = Order::findOrFail($id);
+
+        // Ensure user owns the order
+        if($order->user_id != Auth::id()){
+            return back()->with('error','Unauthorized action');
+        }
+
+        // Prevent cancelling completed/cancelled
+        if(in_array($order->status, ['completed','cancelled','rejected'])){
+            return back()->with('error','This order cannot be cancelled');
+        }
+
+        $order->status = 'cancelled';
+        $order->save();
+
+        return back()->with('success','Order cancelled successfully');
+    }
+
 }

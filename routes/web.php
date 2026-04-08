@@ -93,6 +93,7 @@ Route::middleware(['auth','client'])->group(function(){
     Route::post('/client/cart/clear',[CartController::class,'clear']);
     Route::get('/client/inbox',[MessageController::class,'index']);
     Route::post('/client/inbox/read',[MessageController::class,'markAsRead']);
+    Route::post('/client/orders/{id}/cancel',[OrderController::class,'clientCancel']);
 
 });
 

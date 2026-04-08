@@ -367,6 +367,20 @@
 
                     <div class="modal-footer">
 
+                        {{-- CANCEL BUTTON (NEW) --}}
+                        @if(in_array($order->status, ['pending', 'approved']))
+
+                            <form method="POST" action="/client/orders/{{ $order->id }}/cancel"
+                                onsubmit="return confirm('Are you sure you want to cancel this order?')">
+                                @csrf
+                                <button class="btn btn-danger">
+                                    Cancel Order
+                                </button>
+                            </form>
+
+                        @endif
+
+
                         <button class="btn btn-secondary" data-bs-dismiss="modal">
                             Close
                         </button>

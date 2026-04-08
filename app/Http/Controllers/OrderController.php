@@ -14,66 +14,70 @@ class OrderController extends Controller
 {
 
     public function create()
-{
-
-    $cartItems = Cart::with('item')
-        ->where('user_id',Auth::id())
-        ->get();
-
-    $total = 0;
-
-    foreach($cartItems as $cart){
-        $total += $cart->item->price * $cart->quantity;
-    }
-
-    return view('client.create_order',[
-        'cartItems'=>$cartItems,
-        'total'=>$total
-    ]);
-
-}
+    {
 
 
+        $cartItems = Cart::with('item')
+            ->where('user_id', Auth::id())
+            ->get();
 
-public function store(Request $request)
-{
+        $total = 0;
+        $totalServing = 0;
 
-    $order = Order::create([
-        'user_id'=>Auth::id(),
-        'event_name'=>$request->event_name,
-        'event_date'=>$request->event_date,
-        'event_location'=>$request->event_location,
-        'guest_count'=>$request->guest_count,
-        'status'=>'pending'
-    ]);
+        foreach ($cartItems as $cart) {
+            $total += $cart->item->price * $cart->quantity;
+            $totalServing += $cart->item->serving * $cart->quantity;
+        }
 
-
-    $cartItems = Cart::with('item')
-        ->where('user_id',Auth::id())
-        ->get();
-
-
-    foreach($cartItems as $cart){
-
-        OrderItem::create([
-            'order_id'=>$order->id,
-            'item_id'=>$cart->item_id,
-            'price'=>$cart->item->price,
-            'quantity'=>$cart->quantity
+        return view('client.create_order', [
+            'cartItems' => $cartItems,
+            'total' => $total,
+            'totalServing'=>$totalServing
         ]);
 
     }
 
 
-    /* RESET CART */
 
-    Cart::where('user_id',Auth::id())->delete();
+    public function store(Request $request)
+    {
+
+        $order = Order::create([
+            'user_id' => Auth::id(),
+            'event_name' => $request->event_name,
+            'event_date' => $request->event_date,
+            'event_location' => $request->event_location,
+            'guest_count' => $request->guest_count,
+            'status' => 'pending'
+        ]);
 
 
-    return redirect('/client/dashboard')
-        ->with('success','Order created successfully');
+        $cartItems = Cart::with('item')
+            ->where('user_id', Auth::id())
+            ->get();
 
-}
+
+        foreach ($cartItems as $cart) {
+
+            OrderItem::create([
+                'order_id' => $order->id,
+                'item_id' => $cart->item_id,
+                'price' => $cart->item->price,
+                'quantity' => $cart->quantity
+            ]);
+
+        }
+
+
+        /* RESET CART */
+
+        Cart::where('user_id', Auth::id())->delete();
+
+
+        return redirect('/client/dashboard')
+            ->with('success', 'Order created successfully');
+
+    }
 
 
 
@@ -81,11 +85,11 @@ public function store(Request $request)
     {
 
         $orders = Order::with(['items.item'])
-            ->where('user_id',Auth::id())
+            ->where('user_id', Auth::id())
             ->latest()
             ->get();
 
-        return view('client.orders',compact('orders'));
+        return view('client.orders', compact('orders'));
 
     }
 
@@ -94,11 +98,11 @@ public function store(Request $request)
     public function adminOrders()
     {
 
-        $orders = Order::with(['user','items.item'])
+        $orders = Order::with(['user', 'items.item'])
             ->latest()
             ->get();
 
-        return view('admin.orders',compact('orders'));
+        return view('admin.orders', compact('orders'));
 
     }
 
@@ -109,62 +113,62 @@ public function store(Request $request)
 
         $order = Order::findOrFail($id);
 
-        if($order->status != 'pending'){
+        if ($order->status != 'pending') {
 
-            return back()->with('error','Only pending orders can be approved');
+            return back()->with('error', 'Only pending orders can be approved');
 
         }
 
         $order->status = 'approved';
         $order->save();
 
-        return back()->with('success','Order approved successfully');
+        return back()->with('success', 'Order approved successfully');
 
     }
 
 
 
     public function cancel(Request $request, $id)
-{
-    $order = Order::findOrFail($id);
+    {
+        $order = Order::findOrFail($id);
 
-    if($order->status != 'pending'){
-        return back()->with('error','Only pending orders can be cancelled');
+        if ($order->status != 'pending') {
+            return back()->with('error', 'Only pending orders can be cancelled');
+        }
+
+        $order->status = 'cancelled';
+        $order->save();
+
+        Message::create([
+            'user_id' => $order->user_id,
+            'order_id' => $order->id,
+            'message' => $request->message
+        ]);
+
+        return back()->with('success', 'Order cancelled & message sent');
     }
-
-    $order->status = 'cancelled';
-    $order->save();
-
-    Message::create([
-        'user_id' => $order->user_id,
-        'order_id' => $order->id,
-        'message' => $request->message
-    ]);
-
-    return back()->with('success','Order cancelled & message sent');
-}
 
     public function updatePayment(Request $request, $id)
     {
         echo "Hello";
         $order = Order::with('items')->findOrFail($id);
-    
+
         $request->validate([
             'payment' => 'required|numeric|min:0'
         ]);
-    
+
         // ✅ SAME LOGIC AS BLADE (IMPORTANT)
         $total = $order->items->sum(function ($item) {
             return $item->price * $item->quantity;
         });
-        
-    
+
+
         $payment = $request->payment;
-    
+
         $order->payment = $payment;
-    
+
         $order->save();
-    
+
         return back()->with('success', 'Payment updated successfully');
     }
 
@@ -173,19 +177,19 @@ public function store(Request $request)
         $order = Order::findOrFail($id);
 
         // Ensure user owns the order
-        if($order->user_id != Auth::id()){
-            return back()->with('error','Unauthorized action');
+        if ($order->user_id != Auth::id()) {
+            return back()->with('error', 'Unauthorized action');
         }
 
         // Prevent cancelling completed/cancelled
-        if(in_array($order->status, ['completed','cancelled','rejected'])){
-            return back()->with('error','This order cannot be cancelled');
+        if (in_array($order->status, ['completed', 'cancelled', 'rejected'])) {
+            return back()->with('error', 'This order cannot be cancelled');
         }
 
         $order->status = 'cancelled';
         $order->save();
 
-        return back()->with('success','Order cancelled successfully');
+        return back()->with('success', 'Order cancelled successfully');
     }
 
 }

@@ -112,6 +112,7 @@ Route::middleware(['auth','admin'])->group(function(){
     Route::get('/admin/orders',[OrderController::class,'adminOrders']);
     Route::post('/admin/orders/{id}/approve',[OrderController::class,'approve']);
     Route::post('/admin/orders/{id}/cancel',[OrderController::class,'cancel']);
+    Route::post('/admin/orders/{id}/discount',[OrderController::class,'applyDiscount']);
 
     Route::get('/admin/analytics',[DashboardController::class,'analytics']);
     Route::post('/admin/orders/{id}/payment',[OrderController::class,'updatePayment']);

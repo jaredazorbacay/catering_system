@@ -32,7 +32,7 @@ class OrderController extends Controller
         return view('client.create_order', [
             'cartItems' => $cartItems,
             'total' => $total,
-            'totalServing'=>$totalServing
+            'totalServing' => $totalServing
         ]);
 
     }
@@ -106,6 +106,18 @@ class OrderController extends Controller
 
     }
 
+    public function applyDiscount($id)
+    {
+        $order = Order::findOrFail($id);
+
+        // Apply 20% Senior/PWD discount
+        $order->discount = 0.2;
+
+        $order->save();
+
+        return back()->with('success', 'Senior/PWD discount applied');
+    }
+
 
 
     public function approve($id)
@@ -149,28 +161,43 @@ class OrderController extends Controller
     }
 
     public function updatePayment(Request $request, $id)
-    {
-        echo "Hello";
-        $order = Order::with('items')->findOrFail($id);
+{
+    $order = Order::with('items')->findOrFail($id);
 
-        $request->validate([
-            'payment' => 'required|numeric|min:0'
-        ]);
+    $request->validate([
+        'payment' => 'required|numeric|min:0'
+    ]);
 
-        // ✅ SAME LOGIC AS BLADE (IMPORTANT)
-        $total = $order->items->sum(function ($item) {
-            return $item->price * $item->quantity;
-        });
+    // ✅ Compute original total
+    $total = $order->items->sum(function ($item) {
+        return $item->price * $item->quantity;
+    });
 
+    // ✅ Get discount (default 0)
+    $discount = $order->discount ?? 0;
 
-        $payment = $request->payment;
+    // ✅ Apply discount
+    $discountedTotal = $total - ($total * $discount);
 
-        $order->payment = $payment;
+    // ✅ Update payment
+    $order->payment = $request->payment;
 
-        $order->save();
-
-        return back()->with('success', 'Payment updated successfully');
+    // ✅ UPDATE STATUS BASED ON PAYMENT
+    if ($order->payment <= 0) {
+        // no payment yet
+        $order->status = 'approved';
+    } elseif ($order->payment < $discountedTotal) {
+        // partial payment
+        $order->status = 'approved';
+    } else {
+        // fully paid
+        $order->status = 'completed';
     }
+
+    $order->save();
+
+    return back()->with('success', 'Payment updated successfully');
+}
 
     public function clientCancel($id)
     {

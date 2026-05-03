@@ -4,339 +4,395 @@
 
 @section('content')
 
-<style>
-body { background:#f6f8f9; }
+    <style>
+        body {
+            background: #f6f8f9;
+        }
 
-.dashboard-card{
-border:none;
-border-radius:14px;
-box-shadow:0 6px 18px rgba(0,0,0,0.05);
-background:white;
-}
+        .dashboard-card {
+            border: none;
+            border-radius: 14px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+            background: white;
+        }
 
-.section-title{
-font-weight:600;
-margin-bottom:15px;
-color:#2c3e50;
-}
+        .section-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
 
-.quick-btn{
-background:#0a7f8a;
-border:none;
-color:white;
-padding:8px 16px;
-border-radius:8px;
-}
+        .quick-btn {
+            background: #0a7f8a;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
 
-.quick-btn:hover{
-background:#086a73;
-}
+        .quick-btn:hover {
+            background: #086a73;
+        }
+
+        .order-row {
+            cursor: pointer;
+            transition: 0.2s;
+        }
 
-.order-row{
-cursor:pointer;
-transition:0.2s;
-}
+        .order-row:hover {
+            background: #f1f7f8;
+        }
 
-.order-row:hover{
-background:#f1f7f8;
-}
+        .badge.bg-success {
+            background: #0a7f8a !important;
+        }
 
-.badge.bg-success{ background:#0a7f8a !important; }
-.badge.bg-warning{ background:#ffc107 !important; }
-.badge.bg-danger{ background:#dc3545 !important; }
+        .badge.bg-warning {
+            background: #ffc107 !important;
+        }
 
-.modal-content{
-border-radius:14px;
-border:none;
-box-shadow:0 10px 30px rgba(0,0,0,0.08);
-}
+        .badge.bg-danger {
+            background: #dc3545 !important;
+        }
 
-.list-group-item{
-border:none;
-border-bottom:1px solid #f1f1f1;
-}
-</style>
+        .modal-content {
+            border-radius: 14px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
 
+        .list-group-item {
+            border: none;
+            border-bottom: 1px solid #f1f1f1;
+        }
+    </style>
 
-<div class="container py-4">
 
-<h3 class="mb-4" style="font-weight:700;color:#2c3e50;">
-Admin Dashboard
-</h3>
+    <div class="container py-4">
 
-@if(session('success'))
-<div class="alert alert-success">
-{{ session('success') }}
-</div>
-@endif
+        <h3 class="mb-4" style="font-weight:700;color:#2c3e50;">
+            Admin Dashboard
+        </h3>
 
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
 
-{{-- QUICK ACTIONS --}}
-<div class="card dashboard-card p-4 mb-4">
 
-<h5 class="section-title">Quick Actions</h5>
+        {{-- QUICK ACTIONS --}}
+        <div class="card dashboard-card p-4 mb-4">
 
-<div class="d-flex flex-wrap gap-2">
-<a href="/admin/orders" class="btn quick-btn">View Orders</a>
-<a href="/admin/analytics" class="btn btn-outline-secondary">View Analytics</a>
-</div>
+            <h5 class="section-title">Quick Actions</h5>
 
-</div>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="/admin/orders" class="btn quick-btn">View Orders</a>
+                <a href="/admin/analytics" class="btn btn-outline-secondary">View Analytics</a>
+            </div>
 
+        </div>
 
 
-{{-- UPCOMING EVENTS --}}
-<div class="card dashboard-card p-4 mb-4">
 
-<h5 class="section-title">Upcoming Events</h5>
+        {{-- UPCOMING EVENTS --}}
+        <div class="card dashboard-card p-4 mb-4">
 
-<div class="table-responsive">
+            <h5 class="section-title">Upcoming Events</h5>
 
-<table class="table table-hover align-middle">
+            <div class="table-responsive">
 
-<thead>
-<tr>
-<th>Client</th>
-<th>Phone</th>
-<th>Event</th>
-<th>Date</th>
-<th>Guests</th>
-<th>Total</th>
-</tr>
-</thead>
+                <table class="table table-hover align-middle">
 
-<tbody>
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Phone</th>
+                            <th>Event</th>
+                            <th>Date</th>
+                            <th>Guests</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
 
-@if($upcomingEvents->count())
+                    <tbody>
 
-@foreach($upcomingEvents as $event)
+                        @if($upcomingEvents->count())
 
-@php
-$total = $event->items->sum(fn($i)=>$i->price*$i->quantity);
-@endphp
+                            @foreach($upcomingEvents as $event)
 
-<tr class="order-row" data-bs-toggle="modal" data-bs-target="#orderModal{{$event->id}}">
-<td>{{ $event->user->name }}</td>
-<td>{{ $event->user->phone_number }}</td>
-<td>{{ $event->event_name }}</td>
-<td>{{ \Carbon\Carbon::parse($event->event_date)->format('M d, Y') }}</td>
-<td>{{ $event->guest_count }}</td>
-<td>₱{{ number_format($total,2) }}</td>
-</tr>
+                                @php
+                                    $total = $event->items->sum(fn($i) => $i->price * $i->quantity);
+                                @endphp
 
-@endforeach
+                                <tr class="order-row" data-bs-toggle="modal" data-bs-target="#orderModal{{$event->id}}">
+                                    <td>{{ $event->user->name }}</td>
+                                    <td>{{ $event->user->phone_number }}</td>
+                                    <td>{{ $event->event_name }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($event->event_date)->format('M d, Y') }}</td>
+                                    <td>{{ $event->guest_count }}</td>
+                                    <td>₱{{ number_format($total, 2) }}</td>
+                                </tr>
 
-@else
+                            @endforeach
 
-<tr>
-<td colspan="6" class="text-center text-muted">No upcoming events</td>
-</tr>
+                        @else
 
-@endif
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">No upcoming events</td>
+                            </tr>
 
-</tbody>
+                        @endif
 
-</table>
+                    </tbody>
 
-</div>
+                </table>
 
-</div>
+            </div>
 
+        </div>
 
 
-{{-- EVENT HISTORY --}}
-<div class="card dashboard-card p-4">
 
-<h5 class="section-title">Event History</h5>
+        {{-- EVENT HISTORY --}}
+        <div class="card dashboard-card p-4">
 
-<div class="table-responsive">
+            <h5 class="section-title">Event History</h5>
 
-<table class="table table-hover align-middle">
+            <div class="table-responsive">
 
-<thead>
-<tr>
-<th>Client</th>
-<th>Phone</th>
-<th>Event</th>
-<th>Date</th>
-<th>Total</th>
-<th>Status</th>
-</tr>
-</thead>
+                <table class="table table-hover align-middle">
 
-<tbody>
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Phone</th>
+                            <th>Event</th>
+                            <th>Date</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
 
-@if($pastEvents->count())
+                    <tbody>
 
-@foreach($pastEvents as $event)
+                        @if($pastEvents->count())
 
-@php
-$total = $event->items->sum(fn($i)=>$i->price*$i->quantity);
-@endphp
+                            @foreach($pastEvents as $event)
 
-<tr class="order-row" data-bs-toggle="modal" data-bs-target="#orderModal{{$event->id}}">
-<td>{{ $event->user->name }}</td>
-<td>{{ $event->user->phone_number }}</td>
-<td>{{ $event->event_name }}</td>
-<td>{{ \Carbon\Carbon::parse($event->event_date)->format('M d, Y') }}</td>
-<td>₱{{ number_format($total,2) }}</td>
-<td><span class="badge bg-success">Finished</span></td>
-</tr>
+                                @php
+                                    $total = $event->items->sum(fn($i) => $i->price * $i->quantity);
+                                @endphp
 
-@endforeach
+                                <tr class="order-row" data-bs-toggle="modal" data-bs-target="#orderModal{{$event->id}}">
+                                    <td>{{ $event->user->name }}</td>
+                                    <td>{{ $event->user->phone_number }}</td>
+                                    <td>{{ $event->event_name }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($event->event_date)->format('M d, Y') }}</td>
+                                    <td>₱{{ number_format($total, 2) }}</td>
+                                    <td><span class="badge bg-success">Finished</span></td>
+                                </tr>
 
-@else
+                            @endforeach
 
-<tr>
-<td colspan="6" class="text-center text-muted">No past events</td>
-</tr>
+                        @else
 
-@endif
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">No past events</td>
+                            </tr>
 
-</tbody>
+                        @endif
 
-</table>
+                    </tbody>
 
-</div>
+                </table>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
+    </div>
 
 
-{{-- MODALS --}}
-@foreach($upcomingEvents->merge($pastEvents)->unique('id') as $order)
 
-@php
-$total = $order->items->sum(fn($i)=>$i->price*$i->quantity);
-$paid = $order->payment ?? 0;
-$balance = $total - $paid;
-@endphp
+    {{-- MODALS --}}
+    @foreach($upcomingEvents->merge($pastEvents)->unique('id') as $order)
 
-<div class="modal fade" id="orderModal{{$order->id}}">
+        @php
+            $total = $order->items->sum(fn($i) => $i->price * $i->quantity);
+            $discount = $order->discount ?? 0;
+            $discountedTotal = $total - ($total * $discount);
 
-<div class="modal-dialog modal-lg modal-dialog-centered">
-<div class="modal-content">
+            $paid = $order->payment ?? 0;
+            $balance = $discountedTotal - $paid;
+        @endphp
 
-<div class="modal-header">
-<h5>Order Details</h5>
-<button class="btn-close" data-bs-dismiss="modal"></button>
-</div>
+        <div class="modal fade" id="orderModal{{$order->id}}">
 
-<div class="modal-body">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
 
-{{-- DETAILS --}}
-<div class="row mb-3">
-<div class="col-md-6"><strong>Client:</strong><br>{{ $order->user->name }}</div>
-<div class="col-md-6"><strong>Phone:</strong><br>{{ $order->user->phone_number }}</div>
-</div>
+                    <div class="modal-header">
+                        <h5>Order Details</h5>
+                        <button class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
 
-<div class="row mb-3">
-<div class="col-md-6"><strong>Event:</strong><br>{{ $order->event_name }}</div>
-<div class="col-md-6"><strong>Date:</strong><br>{{ \Carbon\Carbon::parse($order->event_date)->format('M d, Y') }}</div>
-</div>
+                    <div class="modal-body">
 
-<div class="row mb-3">
-<div class="col-md-6"><strong>Location:</strong><br>{{ $order->event_location }}</div>
-<div class="col-md-6"><strong>Guests:</strong><br>{{ $order->guest_count }}</div>
-</div>
+                        {{-- DETAILS --}}
+                        <div class="row mb-3">
+                            <div class="col-md-6"><strong>Client:</strong><br>{{ $order->user->name }}</div>
+                            <div class="col-md-6"><strong>Phone:</strong><br>{{ $order->user->phone_number }}</div>
+                        </div>
 
-<hr>
+                        <div class="row mb-3">
+                            <div class="col-md-6"><strong>Event:</strong><br>{{ $order->event_name }}</div>
+                            <div class="col-md-6">
+                                <strong>Date:</strong><br>{{ \Carbon\Carbon::parse($order->event_date)->format('M d, Y') }}
+                            </div>
+                        </div>
 
-<h6>Menu Items</h6>
+                        <div class="row mb-3">
+                            <div class="col-md-6"><strong>Location:</strong><br>{{ $order->event_location }}</div>
+                            <div class="col-md-6"><strong>Guests:</strong><br>{{ $order->guest_count }}</div>
+                        </div>
 
-<ul class="list-group mb-3">
-@foreach($order->items as $item)
-<li class="list-group-item d-flex justify-content-between">
-<span>{{ $item->item->name }} (x{{ $item->quantity }})</span>
-<span>₱{{ number_format($item->price * $item->quantity,2) }}</span>
-</li>
-@endforeach
-</ul>
+                        <hr>
 
-<h5 class="text-end">Total: ₱{{ number_format($total,2) }}</h5>
+                        <h6>Menu Items</h6>
 
-<hr>
+                        <ul class="list-group mb-3">
+                            @foreach($order->items as $item)
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>{{ $item->item->name }} (x{{ $item->quantity }})</span>
+                                    <span>₱{{ number_format($item->price * $item->quantity, 2) }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
 
-{{-- PAYMENT --}}
-<h6>Payment</h6>
+                        <h5 class="text-end">
 
-<p>Paid: ₱{{ number_format($paid,2) }}</p>
-<p>Balance: ₱{{ number_format($balance,2) }}</p>
+                            @if($discount > 0)
 
-@if($paid <= 0)
+                                <span style="text-decoration:line-through; color:#999;">
+                                    ₱{{ number_format($total, 2) }}
+                                </span>
+
+                                <br>
+
+                                <span style="color:#0a7f8a; font-weight:700;">
+                                    ₱{{ number_format($discountedTotal, 2) }}
+                                </span>
+
+                                <div class="text-success small">
+                                    Discount Applied ({{ $discount * 100 }}%)
+                                </div>
+
+                            @else
+
+                                ₱{{ number_format($total, 2) }}
+                                
+
+                            @endif
+
+                        </h5>
+
+                        @if($discount == 0 && !in_array($order->status,['cancelled']))
+
+                        <form method="POST" action="/admin/orders/{{$order->id}}/discount">
+                        @csrf
+                        <button class="btn btn-warning w-100 mb-3">
+                        Apply Senior/PWD Discount (20%)
+                        </button>
+                        </form>
+
+                        @endif
+
+
+                        <hr>
+
+                        {{-- PAYMENT --}}
+                        <h6>Payment</h6>
+
+                        <p>Paid: ₱{{ number_format($paid, 2) }}</p>
+                        <p>Balance: ₱{{ number_format($balance, 2) }}</p>
+
+                        @if($paid <= 0)
+
 <span class="badge bg-danger">Unpaid</span>
-@elseif($balance > 0)
+
+@elseif($paid < $discountedTotal)
+
 <span class="badge bg-warning text-dark">Partial</span>
+
 @else
+
 <span class="badge bg-success">Paid</span>
-@endif
-
-<hr>
-
-{{-- 🚫 BLOCK PAYMENT --}}
-@if(!in_array($order->status,['pending','cancelled']))
-
-<form method="POST" action="/admin/orders/{{$order->id}}/payment">
-@csrf
-<input type="number" name="payment" step="0.01" class="form-control mb-2" value="{{ $paid }}">
-<button class="btn btn-primary w-100 mb-2">Update Payment</button>
-</form>
-
-<form method="POST" action="/admin/orders/{{$order->id}}/payment">
-@csrf
-<input type="hidden" name="payment" value="{{ $total }}">
-<button class="btn btn-success w-100">Complete Payment</button>
-</form>
-
-@else
-
-<div class="alert alert-warning text-center">
-Payment can only be updated after approval
-</div>
 
 @endif
 
-</div>
+                        <hr>
+
+                        {{-- 🚫 BLOCK PAYMENT --}}
+                        @if(!in_array($order->status, ['pending', 'cancelled']))
+
+                            <form method="POST" action="/admin/orders/{{$order->id}}/payment">
+                                @csrf
+                                <input type="number" name="payment" step="0.01" class="form-control mb-2" value="{{ $paid }}">
+                                <button class="btn btn-primary w-100 mb-2">Update Payment</button>
+                            </form>
+
+                            <form method="POST" action="/admin/orders/{{$order->id}}/payment">
+                                @csrf
+                                <input type="hidden" name="payment" value="{{ $discountedTotal }}">
+                                <button class="btn btn-success w-100">Complete Payment</button>
+                            </form>
+
+                        @else
+
+                            <div class="alert alert-warning text-center">
+                                Payment can only be updated after approval
+                            </div>
+
+                        @endif
+
+                    </div>
 
 
-<div class="modal-footer d-flex justify-content-between">
+                    <div class="modal-footer d-flex justify-content-between">
 
-@if($order->status == 'pending')
+                        @if($order->status == 'pending')
 
-<div class="d-flex gap-2">
+                            <div class="d-flex gap-2">
 
-<form method="POST" action="/admin/orders/{{$order->id}}/approve">
-@csrf
-<button class="btn btn-success">Approve Order</button>
-</form>
+                                <form method="POST" action="/admin/orders/{{$order->id}}/approve">
+                                    @csrf
+                                    <button class="btn btn-success">Approve Order</button>
+                                </form>
 
-<form method="POST" action="/admin/orders/{{ $order->id }}/cancel">
-@csrf
+                                <form method="POST" action="/admin/orders/{{ $order->id }}/cancel">
+                                    @csrf
 
-<textarea name="message"
-class="form-control mb-2"
-placeholder="Reason for cancellation..."
-required></textarea>
+                                    <textarea name="message" class="form-control mb-2" placeholder="Reason for cancellation..."
+                                        required></textarea>
 
-<button class="btn btn-danger w-100">
-Cancel Order
-</button>
+                                    <button class="btn btn-danger w-100">
+                                        Cancel Order
+                                    </button>
 
-</div>
+                            </div>
 
-@endif
+                        @endif
 
-<button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
-</div>
+                    </div>
 
-</div>
-</div>
+                </div>
+            </div>
 
-</div>
+        </div>
 
-@endforeach
+    @endforeach
 
 @endsection

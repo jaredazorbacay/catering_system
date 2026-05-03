@@ -82,8 +82,12 @@ border-bottom:1px solid #f1f1f1;
 
 @php
 $total = $order->items->sum(fn($i)=>$i->price*$i->quantity);
+
+$discount = $order->discount ?? 0;
+$discountedTotal = $total - ($total * $discount);
+
 $paid = $order->payment ?? 0;
-$balance = $total - $paid;
+$balance = $discountedTotal - $paid;
 @endphp
 
 <tr class="order-row" data-bs-toggle="modal" data-bs-target="#orderModal{{$order->id}}">
@@ -139,8 +143,12 @@ $balance = $total - $paid;
 
 @php
 $total = $order->items->sum(fn($i)=>$i->price*$i->quantity);
+
+$discount = $order->discount ?? 0;
+$discountedTotal = $total - ($total * $discount);
+
 $paid = $order->payment ?? 0;
-$balance = $total - $paid;
+$balance = $discountedTotal - $paid;
 @endphp
 
 <div class="modal fade" id="orderModal{{$order->id}}">
@@ -188,21 +196,54 @@ $balance = $total - $paid;
 <h6>Menu Items</h6>
 
 <ul class="list-group mb-3">
-
 @foreach($order->items as $item)
-
 <li class="list-group-item d-flex justify-content-between">
 <span>{{ $item->item->name }} (x{{ $item->quantity }})</span>
 <span>₱{{ number_format($item->price * $item->quantity,2) }}</span>
 </li>
-
 @endforeach
-
 </ul>
 
+{{-- ✅ TOTAL WITH DISCOUNT --}}
 <h5 class="text-end">
-Total: ₱{{ number_format($total,2) }}
+
+@if($discount > 0)
+
+<span style="text-decoration:line-through; color:#999;">
+₱{{ number_format($total,2) }}
+</span>
+
+<br>
+
+<span style="color:#0a7f8a; font-weight:700;">
+₱{{ number_format($discountedTotal,2) }}
+</span>
+
+<div class="text-success small">
+Discount Applied ({{ $discount * 100 }}%)
+</div>
+
+@else
+
+₱{{ number_format($total,2) }}
+
+@endif
+
 </h5>
+
+
+{{-- ✅ APPLY DISCOUNT BUTTON --}}
+@if($discount == 0 && !in_array($order->status,['cancelled']))
+
+<form method="POST" action="/admin/orders/{{$order->id}}/discount">
+@csrf
+<button class="btn btn-warning w-100 mb-3">
+Apply Senior/PWD Discount (20%)
+</button>
+</form>
+
+@endif
+
 
 <hr>
 
@@ -213,18 +254,24 @@ Total: ₱{{ number_format($total,2) }}
 <p>Balance: ₱{{ number_format($balance,2) }}</p>
 
 @if($paid <= 0)
+
 <span class="badge bg-danger">Unpaid</span>
-@elseif($balance > 0)
+
+@elseif($paid < $discountedTotal)
+
 <span class="badge bg-warning text-dark">Partial</span>
+
 @else
+
 <span class="badge bg-success">Paid</span>
+
 @endif
 
 <hr>
 
+{{-- PAYMENT CONTROLS --}}
 @if(!in_array($order->status, ['pending','cancelled']))
 
-{{-- UPDATE PAYMENT --}}
 <form method="POST" action="/admin/orders/{{$order->id}}/payment">
 @csrf
 
@@ -240,10 +287,9 @@ Update Payment
 
 </form>
 
-{{-- COMPLETE PAYMENT --}}
 <form method="POST" action="/admin/orders/{{$order->id}}/payment">
 @csrf
-<input type="hidden" name="payment" value="{{ $total }}">
+<input type="hidden" name="payment" value="{{ $discountedTotal }}">
 
 <button class="btn btn-success w-100">
 Complete Payment
@@ -261,7 +307,7 @@ Payment can only be updated after approval
 
 </div>
 
-{{-- ✅ APPROVE / CANCEL BUTTONS RESTORED --}}
+{{-- APPROVE / CANCEL --}}
 <div class="modal-footer d-flex justify-content-between">
 
 @if($order->status == 'pending')
